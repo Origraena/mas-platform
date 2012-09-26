@@ -1,0 +1,26 @@
+= MAS - Platform =
+
+* launch.sh                  : application launcher
+* ant compile                : compile sources
+* ant release                : compile sources into a jar file, generates javadoc
+
+= Tree view =
+- build.xml
+- src/                       : sources directory
++---- main/                  : main sources directory
++---- tests/                 : tests sources directory
+- target/                    : output directory
++---- build/                 : binary classes directory
++---- tests/                 : test compiled files directory
++---- release/               : release directory
++-------- mas-platform.jar   : project archive
+
+
+= Use =
+* 
+*
+
+## References (external libraries)
+ogapi-core                   : http://github.com/Origraena/ogapi-core/
+ogapi-geometry               : http://github.com/Origraena/ogapi-geometry/
+
