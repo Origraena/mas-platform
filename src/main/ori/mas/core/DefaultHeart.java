@@ -229,6 +229,15 @@ public class DefaultHeart implements Heart {
 		_world.remove(i.target().agent());
 		return i;
 	}
+
+	protected Influence makeInfluence(BirthInfluence i) {
+		Agent a = i.agent();
+		if (this.isValid(a)) {
+			_world.add(a);
+			return i;
+		}
+		return null;
+	}
 	
 	protected void callbackChangeBodyProperty(ChangeBodyPropertyInfluence i) {
 		//System.out.println("callbackChangeBodyProperty()");
@@ -256,6 +265,11 @@ public class DefaultHeart implements Heart {
 
 	protected boolean mayCollide(Body b1, Body b2) {
 		return true;
+	}
+
+	protected boolean isValid(Agent a) {
+		// checks validity
+		return (a.hasBody());
 	}
 
 	private World _world;

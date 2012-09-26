@@ -6,7 +6,7 @@ import ori.mas.influences.ChangeBodyPropertyInfluence;
 import ori.ogapi.util.OperatorPlus;
 import java.util.Comparator;
 
-public abstract class ChangeBodyPropertyActor extends BodyTargetActor {
+public class ChangeBodyPropertyActor extends BodyTargetActor {
 
 	public ChangeBodyPropertyActor() {
 		super();
@@ -47,6 +47,12 @@ public abstract class ChangeBodyPropertyActor extends BodyTargetActor {
 		                                       this.value());
 	}
 
+	@Override
+	public ChangeBodyPropertyActor clone() {
+		return new ChangeBodyPropertyActor(this.body(),
+		                                   _property,
+		                                   _value);
+	}
 
 	private String _property;
 	private Object _value;

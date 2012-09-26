@@ -29,6 +29,11 @@ public class EatActor extends AbstractActor {
 		return _target;
 	}
 
+	@Override
+	public EatActor clone() {
+		return new EatActor(this.body(),_feedInc);
+	}
+
 	int _feedInc = 1;
 	private Body _target;
 

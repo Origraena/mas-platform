@@ -56,6 +56,11 @@ public class MovementActor extends AbstractActor {
 		return new MovementInfluence(this,this.body(),new Point(x,y));
 	}
 
+	@Override
+	public MovementActor clone() {
+		return new MovementActor(this.body(),_maxSpeed);
+	}
+
 	private int _speed, _maxSpeed;
 	private int _angle;
 

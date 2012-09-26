@@ -27,6 +27,8 @@ public abstract class AbstractActor implements Actor {
 
 	@Override public abstract Influence act();
 
+	@Override public abstract AbstractActor clone();
+
 	private Body _body;
 
 };

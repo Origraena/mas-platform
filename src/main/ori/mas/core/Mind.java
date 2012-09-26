@@ -11,5 +11,7 @@ public interface Mind {
 	public Agent agent();
 	public void setAgent(Agent a);
 
+	public Mind clone();
+
 };
 

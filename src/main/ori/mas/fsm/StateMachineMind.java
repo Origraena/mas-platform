@@ -38,11 +38,6 @@ public class StateMachineMind extends AbstractMind {
 		_stateMachine = new StateMachine();
 	}
 
-	public StateMachineMind(Agent a, StateMachine stateMachine) {
-		super(a);
-		_stateMachine = stateMachine;
-	}
-
 	public StateMachineMind(Agent a, State init) {
 		super(a);
 		_stateMachine = new StateMachine(init);
@@ -61,6 +56,12 @@ public class StateMachineMind extends AbstractMind {
 		Actor a = _stateMachine.nextActor(this.agent(),_world);
 		//System.out.println("StateMachineMind actor : "+a);
 		return a;
+	}
+
+	@Override
+	public StateMachineMind clone() {
+		// TODO state . clone
+		return new StateMachineMind(this.agent(),_stateMachine.current());
 	}
 
 	private StateMachine _stateMachine;

@@ -34,6 +34,11 @@ public class ShapeSensor extends AbstractSensor {
 		return new SurfacePercept(w.scene().getPartlyIn(shape));
 	}
 
+	@Override
+	public ShapeSensor clone() {
+		return new ShapeSensor(this.body(),_shape.clone());
+	}
+
 	private Shape _shape;
 
 };

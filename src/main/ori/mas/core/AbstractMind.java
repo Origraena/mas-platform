@@ -32,6 +32,9 @@ public abstract class AbstractMind implements Mind {
 		_agent = a;
 	}
 
+	@Override abstract
+	public AbstractMind clone();
+
 	private Agent _agent;
 };
 

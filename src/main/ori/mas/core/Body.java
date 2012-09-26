@@ -87,6 +87,10 @@ public class Body extends AdaptedShape implements Reportable {
 		return _properties;
 	}
 
+	public void setProperties(Map<String,Object> pties) {
+		_properties = pties;
+	}
+
 	public Object get(String property) {
 		if (_properties == null)
 			return null;
@@ -116,6 +120,18 @@ public class Body extends AdaptedShape implements Reportable {
 		out.decSection();
 		out.newLine();
 		out.report("}");
+	}
+
+	@Override
+	public Body clone() {
+		Body b = new Body(this.shape().clone());
+		for (Sensor s : _sensors)
+			b.addSensor(s.clone());
+		for (Actor a : _actors)
+			b.addActor(a);
+		for (Map.Entry<String,Object> p : _properties.entrySet())
+			b.set(p.getKey(),p.getValue());
+		return b;
 	}
 
 	private Agent _agent;

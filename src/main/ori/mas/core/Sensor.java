@@ -13,5 +13,6 @@ public interface Sensor {
 	 */
 	public Percept sense(World w);
 	public void setBody(Body b);
+	public Sensor clone();
 
 };

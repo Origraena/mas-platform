@@ -13,20 +13,24 @@ public class Agent implements Reportable {
 	public Agent(Body body) {
 		_mind = null;
 		_body = body;
-		_body.setAgent(this);
+		if (_body != null)
+			_body.setAgent(this);
 	}
 
 	public Agent(Mind mind) {
 		_mind = mind;
 		_body = null;
-		_mind.setAgent(this);
+		if (_mind != null)
+			_mind.setAgent(this);
 	}
 
 	public Agent(Mind mind, Body body) {
 		_mind = mind;
 		_body = body;
-		_mind.setAgent(this);
-		_body.setAgent(this);
+		if (_mind != null)
+			_mind.setAgent(this);
+		if (_body != null)
+			_body.setAgent(this);
 	}
 
 	public boolean hasMind() {
@@ -92,6 +96,17 @@ public class Agent implements Reportable {
 		out.decSection();
 		out.newLine();
 		out.report("}");
+	}
+
+	@Override
+	public Agent clone() {
+		Body b = null;
+		Mind m = null;
+		if (this.hasBody())
+			b = _body.clone();
+		if (this.hasMind())
+			m = _mind.clone();
+		return new Agent(m,b);
 	}
 
 	private Body _body;

@@ -73,6 +73,14 @@ public class ChangeBodyIntegerPropertyActor extends BodyTargetActor {
 		                                              this.value());
 	}
 
+	@Override
+	public ChangeBodyIntegerPropertyActor clone() {
+		return new ChangeBodyIntegerPropertyActor(this.body(),
+		                                          _property,
+		                                          _minValue,
+		                                          _maxValue);
+	}
+
 	private int _value;
 	private int _minValue;
 	private int _maxValue;
