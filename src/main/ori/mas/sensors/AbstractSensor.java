@@ -25,6 +25,7 @@ public abstract class AbstractSensor implements Sensor {
 	}
 
 	@Override public abstract Percept sense(World w);
+	@Override public abstract AbstractSensor clone();
 
 	private Body _body;
 
