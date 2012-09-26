@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
 
+/**
+ * Requirements : "target" property must be set.
+ */
 public class FollowState extends AbstractState {
 
 	public FollowState() {
