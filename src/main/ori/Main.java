@@ -33,9 +33,8 @@ public class Main {
 		b1.set(Properties.FEED_MIN,new Integer(0));
 		b1.set(Properties.FEED_MAX,new Integer(100));
 		b1.translate(new Point(100,100));
-		b1.addActor(new MovementActor(b1,10));
-		b1.addActor(new HitActor(b1,1,100));
-		b1.addSensor(new ShapeSensor(b1,new Circle(0,0,100)));
+		b1.addActor(new MovementActor(b1,5));
+		b1.addSensor(new ShapeSensor(b1,new Circle(0,0,150)));
 
 		b2 = new Body();
 		b2.set(Properties.HEALTH,new Integer(1000));
@@ -44,9 +43,10 @@ public class Main {
 		b2.set(Properties.FEED,new Integer(100));
 		b2.set(Properties.FEED_MIN,new Integer(0));
 		b2.set(Properties.FEED_MAX,new Integer(100));
-		b2.translate(new Point(200,120));
-		b2.addActor(new MovementActor(b2,20));
-		b2.addSensor(new ShapeSensor(b2,new Circle(0,0,200)));
+		b2.translate(new Point(100,120));
+		b2.addActor(new MovementActor(b2,10));
+		b2.addActor(new EatActor(b2,10));
+		b2.addSensor(new ShapeSensor(b2,new Circle(0,0,100)));
 
 		m1 = new StateMachineMind(new PatrolState());
 		m2 = new StateMachineMind(new PredateState());
@@ -74,7 +74,7 @@ public class Main {
 		try {
 		PrintWriter p1 = new PrintWriter("agent1.res");
 		PrintWriter p2 = new PrintWriter("agent2.res");
-		final int nbTicks = 10000;
+		final int nbTicks = 100;
 		for (int tick = 0 ; tick < nbTicks ; tick++)  {
 			//System.out.println("tick = "+tick);
 			w.tick();

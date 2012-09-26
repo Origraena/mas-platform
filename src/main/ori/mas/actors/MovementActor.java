@@ -45,14 +45,19 @@ public class MovementActor extends AbstractActor {
 			_speed = 0;
 			return;
 		}
+		Point desired = b.center().clone();
+		desired.minus(this.body().center());
+		_angle = (int)(Math.round(Math.toDegrees(Math.atan2(desired.y,desired.x))));
+		_angle %= 180;
+		_speed = (int)(Math.round(Math.min(_maxSpeed,Math.sqrt(desired.scalar(desired)))));
 	}
 
 	@Override 
 	public MovementInfluence act() {
 		if (_speed <= 0)
 			return null;
-		int x = (int)Math.floor(Math.cos(_angle)*((double)_speed));
-		int y = (int)Math.floor(Math.sin(_angle)*((double)_speed));
+		int x = (int)Math.floor(Math.cos(Math.toRadians(_angle))*((double)_speed));
+		int y = (int)Math.floor(Math.sin(Math.toRadians(_angle))*((double)_speed));
 		return new MovementInfluence(this,this.body(),new Point(x,y));
 	}
 

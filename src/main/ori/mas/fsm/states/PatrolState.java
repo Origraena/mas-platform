@@ -25,6 +25,7 @@ public class PatrolState extends AbstractState {
 
 	@Override 
 	public Actor actor(Agent a, Scene world) {
+		//System.out.println("patrolstate");
 		MovementActor actor = Actors.selectMaxSpeedMovementActor(a.body().actors());
 		if (actor == null)
 			return null;

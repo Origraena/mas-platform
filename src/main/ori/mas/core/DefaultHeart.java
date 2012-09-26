@@ -97,6 +97,8 @@ public class DefaultHeart implements Heart {
 		}
 		if (i instanceof PhysicalInfluence)
 			return this.makeInfluence((PhysicalInfluence)i);
+		if (i instanceof BirthInfluence)
+			return this.makeInfluence((BirthInfluence)i);
 		return null;
 	}
 
@@ -109,6 +111,8 @@ public class DefaultHeart implements Heart {
 			return this.makeInfluence((CollideInfluence)i);
 		if (i instanceof ChangeBodyPropertyInfluence)
 			return this.makeInfluence((ChangeBodyPropertyInfluence)i);
+		if (i instanceof DeathInfluence)
+			return this.makeInfluence((DeathInfluence)i);
 		return null;
 	}
 
@@ -226,6 +230,7 @@ public class DefaultHeart implements Heart {
 	}
 
 	protected Influence makeInfluence(DeathInfluence i) {
+		//System.out.println("death!");
 		_world.remove(i.target().agent());
 		return i;
 	}

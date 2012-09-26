@@ -28,14 +28,18 @@ public class EatState extends AbstractState {
 
 	@Override 
 	public Actor actor(Agent a, Scene world) {
+		//System.out.println("eatstate");
 		EatActor actor = Actors.selectEatActor(a.body().actors());
-		if (actor == null)
-			return null;
 		Body t = null;
 		t = (Body)(a.body().get(Properties.TARGET));
 		if ((t != null) && (world.getPartlyIn(a.body()).contains(t))) {
+			if (actor == null) {
+				a.body().set(Properties.TARGET,null);
+				return null;
+			}
 			actor.setTarget(t);
 			a.body().set(Properties.TARGET,null);
+			//System.out.println("eating...");
 			return actor;
 		}
 		return null;

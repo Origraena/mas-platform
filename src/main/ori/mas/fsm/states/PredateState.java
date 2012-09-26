@@ -55,15 +55,22 @@ public class PredateState extends SuperState {
 			@Override
 			public boolean isValid(Agent a, Scene w) {
 				Body t = (Body)(a.body().get(Properties.TARGET));
-				return ((t == null) || (!(w.contains(t))));
+				if ((t == null) || (!(w.contains(t)))) {
+					return true;
+				}
+				return false;
 			}
 		};
 
 		Transition s2tos3 = new Transition(s3) {
 			@Override
 			public boolean isValid(Agent a, Scene w) {
-				return (w.getPartlyIn(a.body()).contains((Body)(a.body().get(Properties.TARGET))));
+				if (w.getPartlyIn(a.body()).contains((Body)(a.body().get(Properties.TARGET)))) {
+					return true;
+				}
+				return false;
 			}
+			
 		};
 
 		Transition s3tos1 = new Transition(s1) {
@@ -82,12 +89,6 @@ public class PredateState extends SuperState {
 				    && (!(w.getPartlyIn(a.body()).contains(t))));
 			}
 		};
-
-/*		s1tos2.setState(s2);
-		s2tos1.setState(s1);
-		s2tos3.setState(s3);
-		s3tos1.setState(s1);
-		s3tos2.setState(s2);*/
 
 		s1.addTransition(s1tos2);
 		s2.addTransition(s2tos1);

@@ -11,6 +11,7 @@ public class EatActor extends AbstractActor {
 
 	public EatActor(Body b, int feedInc) {
 		super(b);
+		_feedInc = feedInc;
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class EatActor extends AbstractActor {
 		return new EatActor(this.body(),_feedInc);
 	}
 
-	int _feedInc = 1;
+	private int _feedInc = 1;
 	private Body _target;
 
 };
