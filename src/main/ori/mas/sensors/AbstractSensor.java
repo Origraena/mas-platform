@@ -5,8 +5,6 @@ import ori.mas.core.Percept;
 import ori.mas.core.Sensor;
 import ori.mas.core.World;
 
-import java.util.List;
-
 public abstract class AbstractSensor implements Sensor {
 
 	public AbstractSensor() {
@@ -26,7 +24,7 @@ public abstract class AbstractSensor implements Sensor {
 		return _body;
 	}
 
-	@Override public abstract List<Percept> sense(World w);
+	@Override public abstract Percept sense(World w);
 
 	private Body _body;
 

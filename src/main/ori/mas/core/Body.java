@@ -45,7 +45,7 @@ public class Body extends AdaptedShape implements Reportable {
 	public List<Percept> sense(World w) {
 		List<Percept> res = new LinkedList<Percept>();
 		for (Sensor s : _sensors)
-			res.addAll(s.sense(w));
+			res.add(s.sense(w));
 		return res;
 	}
 

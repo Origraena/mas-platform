@@ -28,13 +28,10 @@ public class ShapeSensor extends AbstractSensor {
 	}
 
 	@Override 
-	public List<Percept> sense(World w) {
-		List<Percept> result = new LinkedList<Percept>();
+	public Percept sense(World w) {
 		Shape shape = _shape.clone();
 		shape.translate(this.body().center());
-		SurfacePercept percept = new SurfacePercept(w.scene().getPartlyIn(shape));
-		result.add(percept);
-		return result;
+		return new SurfacePercept(w.scene().getPartlyIn(shape));
 	}
 
 	private Shape _shape;

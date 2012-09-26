@@ -9,10 +9,6 @@ import ori.ogapi.geometry.Surface;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-/**
- * How does it work ?
- * Each agent 
- */
 public class World implements Iterable<Agent>,Reportable {
 
 	private Scene _scene;
