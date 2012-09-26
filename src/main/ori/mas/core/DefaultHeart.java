@@ -61,7 +61,8 @@ public class DefaultHeart implements Heart {
 	public void submitInfluence(Influence i) {
 		//System.out.println("Heart.submitInfluence(i)");
 		//System.out.println("\ti = "+i);
-		_influences.add(i);
+		if (i != null)
+			_influences.add(i);
 	}
 
 	protected void submitPrioritaryInfluence(Influence i) {
