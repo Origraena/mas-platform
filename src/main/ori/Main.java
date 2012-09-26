@@ -17,15 +17,6 @@ public class Main {
 
 	public static void main(String args[]) {
 
-		////
-	/*	World w;
-		Agent noun;  // deep ocean
-		Agent re;    // sun (time, ...)
-		Agent nout;  // weather
-		Agent geb;   // earth*/
-		////
-
-
 		PrintReporter reporter = new PrintReporter(System.out);
 
 		World w;
