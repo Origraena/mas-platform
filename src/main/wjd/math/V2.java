@@ -1,6 +1,8 @@
 /* @author william */
 package wjd.math;
 
+import ori.ogapi.geometry.Point;
+
 public class V2
 {
   /* CONSTANTS */
@@ -29,7 +31,8 @@ public class V2
   
   // constructors
   public V2() { x = y = norm = norm2 = 0.0f; }
-  public V2(float _x, float _y) { x = _x; y = _y; norm = norm2 = -1;  }
+  public V2(Point p) { x = p.x; y = p.y; norm = norm2 = -1.0f; }
+  public V2(float _x, float _y) { x = _x; y = _y; norm = norm2 = -1.0f;  }
   public V2(V2 source, V2 destination)
   {
     x = destination.x - source.x;

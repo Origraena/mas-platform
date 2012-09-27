@@ -52,3 +52,4 @@ nbbuild.xml
 # AGENT LOGS #
 ##############
 agent*.res
+/dist/

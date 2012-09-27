@@ -23,6 +23,7 @@ import ori.mas.sensors.ShapeSensor;
 import ori.ogapi.geometry.Circle;
 import ori.ogapi.geometry.LinkedListSurface;
 import ori.ogapi.geometry.Point;
+import ori.ogapi.util.Iterator;
 import wjd.gui.view.DrawGL;
 import wjd.gui.view.ViewPort;
 import wjd.math.V2;
@@ -36,7 +37,7 @@ public class GUIWindow extends LWJGLWindow
   
   /// TODO -- remove this
   private static final V2 HELLO_POS = new V2(100, 100);
-  private static final String HELLO_TEXT = "Hello Swan!";
+  private static final String HELLO_TEXT = "Hello Agents!";
   
   /// ATTRIBUTES
   private ViewPort view;
@@ -101,8 +102,16 @@ public class GUIWindow extends LWJGLWindow
   {
     // standard stuff
     super.render();
+    
+    // draw agents
+    Iterator itr = world.iterator();
+    while(itr.hasNext())
+    {
+      V2 agent_pos = new V2(((Agent)itr.next()).body().center());
+      DrawGL.circle(view.getPerspective(agent_pos), 8*view.getZoom());
+    }
 
-    // draw code goes here
+    // draw hello text
     DrawGL.text(HELLO_TEXT, view.getPerspective(HELLO_POS));
   }
 
@@ -129,7 +138,6 @@ public class GUIWindow extends LWJGLWindow
   {
     // mouse position
     V2 mouse_pos = new V2(Mouse.getX(), getHeight() - Mouse.getY());
-    V2 mouse_true = view.getGlobal(mouse_pos);
 
     // mouse near edges = pan
     V2 scroll_dir = new V2();
