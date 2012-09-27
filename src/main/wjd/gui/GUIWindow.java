@@ -54,7 +54,7 @@ public class GUIWindow extends LWJGLWindow
     super.render();
 
     // draw code goes here
-    DrawGL.text(HELLO_TEXT, HELLO_POS);
+    DrawGL.text(HELLO_TEXT, view.getPerspective(HELLO_POS));
   }
 
   @Override
@@ -83,16 +83,16 @@ public class GUIWindow extends LWJGLWindow
     V2 mouse_true = view.getGlobal(mouse_pos);
 
     // mouse near edges = pan
-    /*FVect scroll_dir = new FVect(0, 0);
-     if(mouse_pos.x < SCOLL_MOUSE_DISTANCE) 
-     scroll_dir.x = -1;
-     else if(mouse_pos.x > getWidth()-SCOLL_MOUSE_DISTANCE) 
-     scroll_dir.x = 1;
-     if(mouse_pos.y < SCOLL_MOUSE_DISTANCE) 
-     scroll_dir.y = -1;
-     else if(mouse_pos.y > getHeight()-SCOLL_MOUSE_DISTANCE) 
-     scroll_dir.y = 1;
-     view.translate(scroll_dir.scale(SCROLL_SPEED));*/
+    V2 scroll_dir = new V2();
+     if(mouse_pos.x() < SCOLL_MOUSE_DISTANCE) 
+      scroll_dir.x(-1);
+     else if(mouse_pos.x() > getWidth() - SCOLL_MOUSE_DISTANCE) 
+      scroll_dir.x(1);
+     if(mouse_pos.y() < SCOLL_MOUSE_DISTANCE) 
+      scroll_dir.y(-1);
+     else if(mouse_pos.y() > getHeight() - SCOLL_MOUSE_DISTANCE) 
+       scroll_dir.y(1);
+     view.translate(scroll_dir.scale(SCROLL_SPEED));
 
     // mouse wheel = zoom
     int wheel = Mouse.getDWheel();
