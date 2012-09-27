@@ -10,7 +10,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import wjd.gui.view.DrawGL;
 import wjd.gui.view.ViewPort;
-import wjd.math.FVect;
+import wjd.math.V2;
 
 public class GUIWindow extends LWJGLWindow
 {
@@ -20,7 +20,7 @@ public class GUIWindow extends LWJGLWindow
   private static final float ZOOM_SPEED = 0.001f;
   
   /// TODO -- remove this
-  private static final FVect HELLO_POS = new FVect(100, 100);
+  private static final V2 HELLO_POS = new V2(100, 100);
   private static final String HELLO_TEXT = "Hello Swan!";
   
   /// ATTRIBUTES
@@ -34,7 +34,7 @@ public class GUIWindow extends LWJGLWindow
     super(_name, _width, _height);
 
     // create view
-    view = new ViewPort(new FVect(_width, _height));
+    view = new ViewPort(new V2(_width, _height));
 
     // start up
     reset();
@@ -61,15 +61,15 @@ public class GUIWindow extends LWJGLWindow
   protected void processKeyboard()
   {
     // get arrow-key input
-    FVect key_dir = new FVect(0, 0);
+    V2 key_dir = new V2(0, 0);
     if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-      key_dir.y += 1;
+      key_dir.yadd(1);
     if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-      key_dir.y -= 1;
+      key_dir.yadd(-1);
     if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-      key_dir.x += 1;
+      key_dir.xadd(1);
     if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-      key_dir.x -= 1;
+      key_dir.xadd(-1);
 
     // move the view
     view.translate(key_dir.scale(SCROLL_SPEED));
@@ -79,8 +79,8 @@ public class GUIWindow extends LWJGLWindow
   protected void processMouse()
   {
     // mouse position
-    FVect mouse_pos = new FVect(Mouse.getX(), getHeight() - Mouse.getY());
-    FVect mouse_true = view.getGlobal(mouse_pos);
+    V2 mouse_pos = new V2(Mouse.getX(), getHeight() - Mouse.getY());
+    V2 mouse_true = view.getGlobal(mouse_pos);
 
     // mouse near edges = pan
     /*FVect scroll_dir = new FVect(0, 0);
@@ -107,6 +107,6 @@ public class GUIWindow extends LWJGLWindow
     super.resizeGL();
 
     // resize viewport too
-    view.setWindowSize(new FVect(getWidth(), getHeight()));
+    view.setWindowSize(new V2(getWidth(), getHeight()));
   }
 }

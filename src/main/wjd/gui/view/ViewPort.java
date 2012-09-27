@@ -6,8 +6,8 @@
  */
 package wjd.gui.view;
 
-import wjd.math.FRect;
-import wjd.math.FVect;
+import wjd.math.Rect;
+import wjd.math.V2;
 
 public class ViewPort
 {
@@ -15,23 +15,23 @@ public class ViewPort
   private static final float ZOOM_MIN = 0.1f;
   private static final float ZOOM_MAX = 2.0f;
   /// ATTRIBUTES
-  private FVect window_size;
-  private FRect area;
+  private V2 window_size;
+  private Rect area;
   private float zoom;
 
   /// METHODS
   // creation
-  public ViewPort(FVect size)
+  public ViewPort(V2 size)
   {
-    area = new FRect(FVect.ORIGIN, size);
+    area = new Rect(V2.ORIGIN, size);
     window_size = size;
     zoom = 1.0f;
   }
 
   public void reset()
   {
-    area.setPosition(FVect.ORIGIN);
-    area.setSize(window_size);
+    area.pos(V2.ORIGIN);
+    area.size(window_size);
     zoom = 1.0f;
   }
 
@@ -41,29 +41,29 @@ public class ViewPort
     return zoom;
   }
 
-  public FVect getPerspective(FVect p)
+  public V2 getPerspective(V2 p)
   {
-    return new FVect((p.x - area.x) * zoom, (p.y - area.y) * zoom);
+    return new V2((p.x() - area.x) * zoom, (p.y() - area.y) * zoom);
   }
 
-  public FVect getGlobal(FVect p)
+  public V2 getGlobal(V2 p)
   {
-    return new FVect(p.x / zoom + area.x, p.y / zoom + area.y);
+    return new V2(p.x() / zoom + area.x, p.y() / zoom + area.y);
   }
 
-  public boolean containsPoint(FVect position)
+  public boolean containsPoint(V2 position)
   {
     return area.contains(position);
   }
 
-  public boolean containsLine(FVect start, FVect end)
+  public boolean containsLine(V2 start, V2 end)
   {
     // discard useless states
-    if (Math.min(start.x, end.x) > area.x + area.width
-      || Math.max(start.x, end.x) < area.x)
+    if (Math.min(start.x(), end.x()) > area.x + area.w
+      || Math.max(start.x(), end.x()) < area.x)
       return false;
-    if (Math.min(start.y, end.y) > area.y + area.height
-      || Math.max(start.y, end.y) < area.y)
+    if (Math.min(start.y(), end.y()) > area.y + area.h
+      || Math.max(start.y(), end.y()) < area.y)
       return false;
 
     // otherwise it's all good!
@@ -71,23 +71,23 @@ public class ViewPort
   }
 
   // modification
-  public void setWindowSize(FVect _window_size)
+  public void setWindowSize(V2 _window_size)
   {
     window_size = _window_size;
-    area.setSize(window_size.x / zoom, window_size.y / zoom);
+    area.size(window_size.clone().scale(1.0f / zoom));
   }
 
-  public void translate(FVect delta)
+  public void translate(V2 delta)
   {
-    area.translate(delta.scale(1 / zoom));
+    area.shift(delta.scale(1 / zoom));
   }
 
-  public void zoom(float delta, FVect mouse_pos)
+  public void zoom(float delta, V2 mouse_pos)
   {
 
-    FVect mouse_true = getGlobal(mouse_pos);
-    FVect mouse_rel = new FVect(window_size.x / mouse_pos.x,
-      window_size.y / mouse_pos.y);
+    V2 mouse_true = getGlobal(mouse_pos);
+    V2 mouse_rel = new V2(window_size.x() / mouse_pos.x(),
+      window_size.y() / mouse_pos.y());
 
     // reset zoom counter, don't zoom too much
     zoom += delta * zoom;
@@ -97,13 +97,13 @@ public class ViewPort
       zoom = ZOOM_MIN;
 
     // perform the zoom
-    area.setSize(window_size.x / zoom, window_size.y / zoom);
+    area.size(window_size.clone().scale(1.0f / zoom));
 
 
     //area.x = (mouse_pos.x/zoom + area.x) - area.width/(window_size.x/mouse_pos.x);
 
-    area.x = mouse_true.x - area.width / mouse_rel.x;
-    area.y = mouse_true.y - area.height / mouse_rel.y;
+    area.x = mouse_true.x() - area.w / mouse_rel.x();
+    area.y = mouse_true.y() - area.h / mouse_rel.y();
 
   }
 }
