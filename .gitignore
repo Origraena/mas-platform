@@ -42,3 +42,14 @@ Thumbs.db
 *.swn
 *.*~
 
+# NETBEANS #
+############
+manifest.mf
+nbbuild.xml
+/nbproject/**
+/build/
+
+# AGENT LOGS #
+##############
+agent*.res
+/dist/
