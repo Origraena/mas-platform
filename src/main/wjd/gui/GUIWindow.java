@@ -97,6 +97,13 @@ public class GUIWindow extends LWJGLWindow
   }
 
   // overrides
+  
+  @Override
+  protected void update(long t_delta)
+  {
+    // update game world
+  }
+  
   @Override
   protected void render()
   {

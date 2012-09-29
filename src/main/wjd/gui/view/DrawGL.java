@@ -16,7 +16,7 @@ import wjd.math.V2;
 public abstract class DrawGL 
 {
   /// CLASS NAMESPACE CONSTANTS
-  private static final int CIRCLE_SEGMENTS = 20;
+  private static final int CIRCLE_BASE_SEGMENTS = 6;
   private static TrueTypeFont font = null;
 
   public static final float[] BLACK = { 0.0f, 0.0f, 0.0f };
@@ -49,9 +49,10 @@ font = new TrueTypeFont(new Font("Arial", Font.PLAIN, 12), false);
 
   public static void circle(V2 center, float radius)
   {
+    int deg_step = (int)(360/(CIRCLE_BASE_SEGMENTS*radius));
     glBegin(GL_TRIANGLE_FAN);
       glVertex2f(center.x(), center.y());
-      for(int deg = 0; deg <= 360; deg += 360/CIRCLE_SEGMENTS)
+      for(int deg = 0; deg < 360+deg_step; deg += deg_step)
       {
           double rad = deg * Math.PI/180;
           glVertex2f((float)(center.x() + Math.cos(rad)*radius),

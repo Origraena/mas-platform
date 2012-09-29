@@ -7,6 +7,7 @@
 package wjd.gui;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -16,11 +17,14 @@ import wjd.gui.view.DrawGL;
 
 public abstract class LWJGLWindow
 {
-  /// ATTRIBUTES
+  /* ATTRIBUTES */
+  // window
   private int width, height;
   private final String name;
+  // timing
+  private long t_previous;
 
-  /// METHODS
+  /* METHODS */
   // creation and destruction
   public LWJGLWindow(String _name, int _width, int _height)
   {
@@ -70,12 +74,12 @@ public abstract class LWJGLWindow
         // don't update if display is not in focus
         processKeyboard();
         processMouse();
-        update();
+        update(timeDelta());
         render();
       }
       else
       {
-        // redraw screen is out of date
+        // redraw screen if out of date
         if (Display.isDirty())
           render();
         try
@@ -97,22 +101,21 @@ public abstract class LWJGLWindow
   {
     return height;
   }
-
   public int getWidth()
   {
     return width;
   }
 
-  /// SUBROUTINES
+
+  /* SUBROUTINES */
   // update and input
-  protected void update()
+  protected void update(long t_delta)
   {
     if (Display.wasResized())
     {
       width = Display.getWidth();
       height = Display.getHeight();
       resizeGL();
-      System.out.println(width);
     }
   }
 
@@ -145,4 +148,17 @@ public abstract class LWJGLWindow
     glLoadIdentity();
     glPushMatrix();
   }
+
+  public int timeDelta() 
+  {
+    long t_now = timeNow();
+    int t_delta = (int)(t_now - t_previous);
+    t_previous = t_now;
+    return t_delta;
+	}
+  
+  public long timeNow() 
+  {
+    return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+	}
 }
