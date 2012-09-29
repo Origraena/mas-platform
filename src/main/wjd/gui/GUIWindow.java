@@ -34,9 +34,8 @@ import ori.ogapi.geometry.Circle;
 import ori.ogapi.geometry.LinkedListSurface;
 import ori.ogapi.geometry.Point;
 import ori.ogapi.util.Iterator;
-import wjd.gui.view.DrawGL;
 import wjd.gui.view.Camera;
-import wjd.math.Rect;
+import wjd.gui.view.DrawGL;
 import wjd.math.V2;
 
 /**
@@ -115,6 +114,7 @@ public class GUIWindow extends LWJGLWindow
   @Override
   protected void update(long t_delta)
   {
+    world.tick();
   }
 
   @Override
