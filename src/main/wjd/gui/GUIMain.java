@@ -5,7 +5,9 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** Launches the Graphical User Interface for our Multi-agent simulation.
+/**
+ * Launches the Graphical User Interface for our Multi-agent simulation.
+ *
  * @author wdyce
  * @date Sep 27, 2012
  */
@@ -14,8 +16,8 @@ abstract class GUIMain
   /// CLASS NAMESPACE CONSTANTS
   public static final Logger LOGGER = Logger.getLogger(GUIMain.class.getName());
   public static final String WIN_NAME = "Virtual Societies";
-  public static final int WIN_W = 640;
-  public static final int WIN_H = 480;
+  public static final int WIN_W = 960;
+  public static final int WIN_H = 640;
 
   /// CLASS INITIALISATION
   static
@@ -37,7 +39,7 @@ abstract class GUIMain
      * unless you indicate to the JVM where to find them! As such the program
      * must be run with the following argument: 
      * -Djava.library.path=/a/path/to/lwjgl-2.8.4/native/your_operating_system
-    */
+     */
     LWJGLWindow window = null;
     try
     {

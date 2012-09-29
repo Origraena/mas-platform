@@ -115,10 +115,10 @@ public abstract class DrawGL
   public static void box(Rect rect)
   {
     glBegin(GL_QUADS);
-      glVertex2f(rect.x, rect.y);
-      glVertex2f(rect.x+rect.w, rect.y);
-      glVertex2f(rect.x, rect.y+rect.h);
-      glVertex2f(rect.x+rect.w, rect.y+rect.h);
+      glVertex2f(rect.x(), rect.y());
+      glVertex2f(rect.x()+rect.w(), rect.y());
+      glVertex2f(rect.x(), rect.y()+rect.h());
+      glVertex2f(rect.x()+rect.w(), rect.y()+rect.h());
     glEnd();
   }
 

@@ -11,25 +11,33 @@ import wjd.math.V2;
  */
 public class Camera
 {
-  /// CONSTANTS
+  /* CONSTANTS */
   private static final float ZOOM_MIN = 0.1f;
   private static final float ZOOM_MAX = 2.0f;
   
-  /// ATTRIBUTES
+  
+  /* ATTRIBUTES */
+  
   private V2 canvas_size;
-  private Rect view;
+  private Rect view, boundary;
   private float zoom;
 
-  /// METHODS
+  
+  /* METHODS */
+  
   // creation
-  /**
-   * 
-   * @param canvas_size the size in pixels of the area of the screen that the 
-   * camera's view will be projected on to.
+  /** Create a camera by specifying the size of the canvas its perspective will
+   * be drawn to as well as the boundary rectangle  the view should remain 
+   * within.
+   * @param canvas_size the vector size in pixels of the area of the screen that 
+   * the camera's view will be projected on to.
+   * @param boundary the Rectangle that the view must remain within, or null for
+   * no boundary.
    */
-  public Camera(V2 canvas_size)
+  public Camera(V2 canvas_size, Rect boundary)
   {
     this.canvas_size = canvas_size;
+    this.boundary = boundary;
     view = new Rect(V2.ORIGIN, canvas_size);
     zoom = 1.0f;
   }
@@ -38,7 +46,7 @@ public class Camera
    */
   public void reset()
   {
-    view.pos_size(V2.ORIGIN, canvas_size);
+    view.reset(V2.ORIGIN, canvas_size);
     zoom = 1.0f;
   }
 
@@ -61,7 +69,7 @@ public class Camera
    */
   public V2 getPerspective(V2 position)
   {
-    return new V2((position.x() - view.x)*zoom, (position.y() - view.y)*zoom);
+    return new V2((position.x() - view.x())*zoom, (position.y() - view.y())*zoom);
   }
 
   /** Convert a position relative to the view (for instance, the position of the
@@ -72,7 +80,7 @@ public class Camera
    */
   public V2 getGlobal(V2 position)
   {
-    return new V2(position.x()/zoom + view.x, position.y()/zoom + view.y);
+    return new V2(position.x()/zoom + view.x(), position.y()/zoom + view.y());
   }
 
   /** Return true if the specified position is in view, false if not.
@@ -101,9 +109,14 @@ public class Camera
    * level of zoom (the closer we are the faster we move).
    * @param translation a vector direction to move the view in.
    */
-  public void translate(V2 translation)
+  public void pan(V2 translation)
   {
+    // move the view
     view.shift(translation.scale(1 / zoom));
+    
+    // don't stray out of bounds
+    if(boundary != null)
+      keepInsideBounds();
   }
 
   /** Zoom towards or away from the specified target.
@@ -126,8 +139,45 @@ public class Camera
 
     // perform the zoom
     view.size(canvas_size.clone().scale(1.0f / zoom));
-    view.x = target_true.x() - view.w / target_relative.x();
-    view.y = target_true.y() - view.h / target_relative.y();
-
+    view.x(target_true.x() - view.w() / target_relative.x());
+    view.y(target_true.y() - view.h() / target_relative.y());
+    
+    // don't stray out of bounds
+    if(boundary != null)
+      keepInsideBounds();
+  }
+  
+  /* SUBROUTINES */
+  private void keepInsideBounds()
+  {
+    V2 overlap = view.overlap(boundary);
+    
+    // pan view to keep within borders
+    
+    // pan view to keep within borders -- left/right
+    if(overlap.x() < 0)
+    {
+      // left
+      if(view.x() < boundary.x())
+        view.x(boundary.x());
+      // right
+      else if(view.endx() > boundary.endx())
+        view.x(boundary.endx()-view.w());
+    }
+    else if(overlap.x() > 0)
+      view.x(boundary.x() - overlap.x()*0.5f);
+    
+    // pan view to keep within borders -- top/bottom
+    if(overlap.y() < 0)
+    {
+      // top
+      if(view.y() < boundary.y())
+        view.y(boundary.y());
+      // bottom
+      else if(view.endy() > boundary.endy())
+        view.y(boundary.endy()-view.h());
+    }
+    else if(overlap.y() > 0)
+      view.y(boundary.y() - overlap.y()*0.5f);
   }
 }
