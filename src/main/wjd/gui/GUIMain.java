@@ -1,9 +1,3 @@
-/**
- * ***************
- * @author wdyce
- * @date Feb 14, 2012
- ****************
- */
 package wjd.gui;
 
 import java.io.IOException;
@@ -11,6 +5,10 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/** Launches the Graphical User Interface for our Multi-agent simulation.
+ * @author wdyce
+ * @date Sep 27, 2012
+ */
 abstract class GUIMain
 {
   /// CLASS NAMESPACE CONSTANTS
@@ -40,7 +38,6 @@ abstract class GUIMain
      * must be run with the following argument: 
      * -Djava.library.path=/a/path/to/lwjgl-2.8.4/native/your_operating_system
     */
-    
     LWJGLWindow window = null;
     try
     {

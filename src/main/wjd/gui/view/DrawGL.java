@@ -13,6 +13,11 @@ import org.newdawn.slick.TrueTypeFont;
 import wjd.math.Rect;
 import wjd.math.V2;
 
+/** A collection of static drawing factions to render primitives (circles, boxes
+ * and so-on) using OpenGL.
+ * @author wdyce
+ * @date 16-Feb-2012
+ */
 public abstract class DrawGL 
 {
   /// CLASS NAMESPACE CONSTANTS

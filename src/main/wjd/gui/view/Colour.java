@@ -1,8 +1,9 @@
-/** * @author william */
-
-
 package wjd.gui.view;
 
+/** Basic Colour class.
+ * @author william
+ * @date Sep 29, 2012
+ */
 public class Colour 
 {
   /* CONSTANTS */

@@ -1,9 +1,3 @@
-/**
- * ***************
- * @author wdyce
- * @date Feb 15, 2012
- ****************
- */
 package wjd.gui;
 
 import org.lwjgl.input.Keyboard;
@@ -25,9 +19,14 @@ import ori.ogapi.geometry.LinkedListSurface;
 import ori.ogapi.geometry.Point;
 import ori.ogapi.util.Iterator;
 import wjd.gui.view.DrawGL;
-import wjd.gui.view.ViewPort;
+import wjd.gui.view.Camera;
 import wjd.math.V2;
 
+/** Window manager of the Graphical User Interface of our Multi-agent 
+ * simulation.
+ * @author wdyce
+ * @date Sep 27, 2012
+ */
 public class GUIWindow extends LWJGLWindow
 {
   /// CONSTANTS
@@ -40,18 +39,18 @@ public class GUIWindow extends LWJGLWindow
   private static final String HELLO_TEXT = "Hello Agents!";
   
   /// ATTRIBUTES
-  private ViewPort view;
+  private Camera view;
   private World world;
 
   /// METHODS
   // construction
-  public GUIWindow(String _name, int _width, int _height)
+  public GUIWindow(String name, int width, int height)
   {
     // save variables
-    super(_name, _width, _height);
+    super(name, width, height);
 
     // create view
-    view = new ViewPort(new V2(_width, _height));
+    view = new Camera(new V2(width, height));
     
     // start up
     reset();
@@ -101,7 +100,6 @@ public class GUIWindow extends LWJGLWindow
   @Override
   protected void update(long t_delta)
   {
-    // update game world
   }
   
   @Override
@@ -170,7 +168,7 @@ public class GUIWindow extends LWJGLWindow
     // standard stuff
     super.resizeGL();
 
-    // resize viewport too
-    view.setWindowSize(new V2(getWidth(), getHeight()));
+    // resize camera viewport too
+    view.setCanvasSize(new V2(getWidth(), getHeight()));
   }
 }

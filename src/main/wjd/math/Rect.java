@@ -59,6 +59,24 @@ public class Rect
     return (V2.dot(new V2(pos(), r.pos().add(r.size())), 
                   new V2(r.pos(), pos().add(size()))) > 0);
   }
+  /** Check whether any part of the specified segment enters the Rectangle.
+   * @param start the start position of the segment.
+   * @param end the end position of the segment.
+   * @return true is any part of the segment enters this Rectangle.
+   */
+  public boolean collides(V2 start, V2 end)
+  {
+    // discard useless states
+    if (Math.min(start.x(), end.x()) > x + w
+      || Math.max(start.x(), end.x()) < x)
+      return false;
+    if (Math.min(start.y(), end.y()) > y + h
+      || Math.max(start.y(), end.y()) < y)
+      return false;
+
+    // otherwise it's all good!
+    return true;
+  }
   
   // base mutators
   public Rect x(float _x) { x = _x; return this; }
@@ -83,6 +101,10 @@ public class Rect
   // element-wise arithmetic mutators
   public Rect pos(V2 v) { return xy(v.x(), v.y()); }
   public Rect size(V2 v) { return wh(v.x(), v.y()); }
+  public Rect pos_size(V2 pos, V2 size) 
+  { 
+    return xywh(pos.x(), pos.y(), size.x(), size.y());
+  }
   public Rect shift(V2 v) { return xy(x + v.x(), y + v.y()); } 
   public Rect unshift(V2 v) { return xy(x - v.x(), y - v.y()); } 
   public Rect scale(V2 v) { return wh(w*v.x(), h*v.y()); }
