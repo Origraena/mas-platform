@@ -19,14 +19,14 @@ public abstract class DrawGL
   private static final int CIRCLE_BASE_SEGMENTS = 6;
   private static TrueTypeFont font = null;
 
-  public static final float[] BLACK = { 0.0f, 0.0f, 0.0f };
-  public static final float[] YELLOW = { 1.0f, 1.0f, 0.0f };
-
 
   /// CLASS NAMESPACE FUNCTIONS
 
   // initialisation
 
+  /** Set up the OpenGL state machine for drawing, including setting clear 
+   * colour and depth, and enabling/disabling various options (namely 3D).
+   */
   public static void init()
   {
     // background colour and depth
@@ -41,55 +41,74 @@ public abstract class DrawGL
     // we need blending (alpha) for drawing strings
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-      // load a default java font
-font = new TrueTypeFont(new Font("Arial", Font.PLAIN, 12), false);
+    // load a default java font
+    font = new TrueTypeFont(new Font("Arial", Font.PLAIN, 12), false);
   }
 
   // drawing functions
 
-  public static void circle(V2 center, float radius)
+  /** Draw a black circle outline around the specified position, using the given
+   * radius.
+   * @param centre vector position corresponding to the centre of the circle.
+   * @param radius the size of the circle from centre to outskirts. 
+   */
+  public static void circle(V2 centre, float radius)
   {
     int deg_step = (int)(360/(CIRCLE_BASE_SEGMENTS*radius));
     glBegin(GL_TRIANGLE_FAN);
-      glVertex2f(center.x(), center.y());
+      glVertex2f(centre.x(), centre.y());
       for(int deg = 0; deg < 360+deg_step; deg += deg_step)
       {
           double rad = deg * Math.PI/180;
-          glVertex2f((float)(center.x() + Math.cos(rad)*radius),
-                     (float)(center.y() + Math.sin(rad)*radius));
+          glVertex2f((float)(centre.x() + Math.cos(rad)*radius),
+                     (float)(centre.y() + Math.sin(rad)*radius));
       }
     glEnd();
   }
 
-  public static void circle(V2 center, float radius, float[] colour)
+  /** Draw a circle at around the specified position, using the given radius and
+   * Colour.
+   * @param centre vector position corresponding to the centre of the circle.
+   * @param radius the size of the circle from centre to outskirts. 
+   * @param colour the Colour to be used to draw the circle.
+   */
+  public static void circle(V2 centre, float radius, Colour colour)
   {
-    glColor3f(colour[0], colour[1], colour[2]);
-    circle(center, radius);
+    glColor3f(colour.r, colour.b, colour.g);
+    circle(centre, radius);
   }
 
+  /** Draw a straight black line between the two specified points.
+   * @param start vector position corresponding to the start of the line.
+   * @param end vector position corresponding to the end of the line.
+   */
   public static void line(V2 start, V2 end)
   {
-    line(start, end, BLACK, 1.0f);
-  }
-
-  public static void line(V2 start, V2 end, float[] colour, float width)
-  {
-    glLineWidth(width);
-    glColor3f(colour[0], colour[1], colour[2]);
     glBegin(GL_LINES);
         glVertex2d(start.x(), start.y());
         glVertex2d(end.x(), end.y());
     glEnd();
   }
 
-  public static void box(Rect rect)
+  /** Draw a straight line between the two specified points using the specified
+   * Colour and the specified line width.
+   * @param start vector position corresponding to the start of the line.
+   * @param end vector position corresponding to the end of the line.
+   * @param colour Colour to be used to draw the line.
+   * @param width the width of the line in pixels.
+   */
+  public static void line(V2 start, V2 end, Colour colour, float width)
   {
-    box(rect, BLACK);
+    glLineWidth(width);
+    glColor3f(colour.r, colour.b, colour.g);
+    line(start, end);
   }
 
-  public static void box(Rect rect, float[] colour)
+  /** Draw the outline of a Rectangle in black.
+   * @param rect the rectangle object whose outline will be drawn.
+   */
+  public static void box(Rect rect)
   {
-    glColor3f(colour[0], colour[1], colour[2]);
     glBegin(GL_QUADS);
       glVertex2f(rect.x, rect.y);
       glVertex2f(rect.x+rect.w, rect.y);
@@ -98,6 +117,20 @@ font = new TrueTypeFont(new Font("Arial", Font.PLAIN, 12), false);
     glEnd();
   }
 
+  /** Draw the outline of a Rectangle using the specified Colour.
+   * @param rect the rectangle object whose outline will be drawn.
+   * @param colour the Colour to be used to draw the rectangle.
+   */
+  public static void box(Rect rect, Colour colour)
+  {
+    glColor3f(colour.r, colour.b, colour.g);
+    box(rect);
+  }
+
+  /** Draw a String of characters at the indicated position in black.
+   * @param string the String of characters to be drawn.
+   * @param position the position on the screen to draw the String. 
+   */
   public static void text(String string, V2 position)
   {
     glEnable(GL_BLEND);
@@ -105,11 +138,17 @@ font = new TrueTypeFont(new Font("Arial", Font.PLAIN, 12), false);
     glDisable(GL_BLEND);    
   }
 
-  public static void text(String string, V2 position, float[] colour)
+  /** Draw a String of characters at the indicated position using the specified
+   * Colour.
+   * @param string the String of characters to be drawn.
+   * @param position the position on the screen to draw the String.
+   * @param colour the Colour to be used to draw the String.
+   */
+  public static void text(String string, V2 position, Colour colour)
   {
     glEnable(GL_BLEND);
     font.drawString(position.x(), position.y(), string, 
-            new Color(colour[0], colour[1], colour[2]));
+            new Color(colour.r, colour.g, colour.b));
     glDisable(GL_BLEND);
   }
 }
