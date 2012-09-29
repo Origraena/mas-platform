@@ -1,20 +1,19 @@
 /*
-Copyright (C) 2012 William James Dyce
+ Copyright (C) 2012 William James Dyce
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package wjd.math;
 
 /**
@@ -92,7 +91,23 @@ public class V2
     return dot(a, b) == a.norm() * b.norm();
   }
   /* ATTRIBUTES */
-  private float x, y, norm, norm2;
+  /**
+   * abscissa value: horizontal component.
+   */
+  private float x;
+  /**
+   * ordinate value: vertical component.
+   */
+  private float y;
+  /**
+   * cached norm (also known as magnitude or length): set to -1 if out of date.
+   */
+  private float norm;
+  /**
+   * cached square norm (also known as magnitude or length): set to -1 if out of
+   * date.
+   */
+  private float norm2;
   /* NB - cached norm and norm2 are negative if out-of-date */
 
   /* METHODS */
@@ -201,11 +216,22 @@ public class V2
     return norm;
   }
 
+  /**
+   * Get a vector containing the sign of each component.
+   *
+   * @return a vector where the components correspond to the signs of this
+   * vector's components.
+   */
   public V2 sign()
   {
     return new V2(Math.signum(x), Math.signum(y));
   }
 
+  /**
+   * Convert to String, for debugging.
+   *
+   * @return a String formatted as follows: (x, y)
+   */
   @Override
   public String toString()
   {
@@ -219,116 +245,244 @@ public class V2
   }
 
   // base mutators
-  public V2 x(float _x)
+  /**
+   * Set the horizontal component of the vector.
+   *
+   * @param x the new value for the abscissa.
+   * @return this, so that multiple operations can be queued.
+   */
+  public V2 x(float x)
   {
-    x = _x;
+    this.x = x;
     norm = norm2 = -1.0f;
     return this;
   }
 
-  public V2 y(float _y)
+  /**
+   * Set the vertical component of the vector.
+   *
+   * @param y the new value for the ordinate.
+   * @return this, so that multiple operations can be queued.
+   */
+  public V2 y(float y)
   {
-    y = _y;
+    this.y = y;
     norm = norm2 = -1.0f;
     return this;
   }
 
-  public V2 xy(float _x, float _y)
+  /**
+   * Reset the horizontal and vertical components of the vector.
+   *
+   * @param x the new value for the abscissa.
+   * @param y the new value for the ordinate.
+   * @return this, so that multiple operations can be queued.
+   */
+  public V2 xy(float x, float y)
   {
-    x = _x;
-    y = _y;
+    this.x = x;
+    this.y = y;
     norm = norm2 = -1.0f;
     return this;
   }
+
   // arithmetic mutators
-
+  /**
+   * Add a real value to the abscissa (x).
+   *
+   * @param dx amount to be added to the horizontal component
+   * @return this, so that multiple operations can be queued.
+   */
   public V2 xadd(float dx)
   {
     return x(x + dx);
   }
 
+  /**
+   * Add a real value to the ordinate (y).
+   *
+   * @param dy amount to be added to the vertical component
+   * @return this, so that multiple operations can be queued.
+   */
   public V2 yadd(float dy)
   {
     return y(y + dy);
   }
 
+  /**
+   * Add a real value to the abscissa (x) and the ordinate (y).
+   *
+   * @param dx amount to be added to the horizontal component
+   * @param dy amount to be added to the vertical component
+   * @return this, so that multiple operations can be queued.
+   */
   public V2 add(float dx, float dy)
   {
     return xy(x + dx, y + dy);
   }
 
-  public V2 scale(float amount)
+  /**
+   * Multiply the horizontal and vertical components of the vector by a real.
+   *
+   * @param multiplier the real value to multiply the vector by.
+   * @return this, so that multiple operations can be queued.
+   */
+  public V2 scale(float multiplier)
   {
-    return xy(x * amount, y * amount);
+    return xy(x * multiplier, y * multiplier);
   }
 
+  /**
+   * Add 1 to the horizontal and vertical components of the vector.
+   *
+   * @return this, so that multiple operations can be queued.
+   */
   public V2 inc()
   {
     return (xy(x + 1, y + 1));
   }
 
+  /**
+   * Subtract 1 from the horizontal and vertical components of the vector.
+   *
+   * @return this, so that multiple operations can be queued.
+   */
   public V2 dinc()
   {
     return (xy(x - 1, y - 1));
   }
 
+  /**
+   * Set the horizontal and vertical components of the vector to their
+   * respective absolute values.
+   *
+   * @return this, so that multiple operations can be queued.
+   */
   public V2 abs()
   {
     return (xy((float) Math.abs(x), (float) Math.abs(y)));
   }
 
+  /**
+   * Round down the horizontal and vertical components of the vector.
+   *
+   * @return this, so that multiple operations can be queued.
+   */
   public V2 floor()
   {
     return (xy((float) Math.floor(x), (float) Math.floor(y)));
   }
 
+  /**
+   * Round up the horizontal and vertical components of the vector.
+   *
+   * @return this, so that multiple operations can be queued.
+   */
   public V2 ceil()
   {
     return (xy((float) Math.ceil(x), (float) Math.ceil(y)));
   }
   // element-wise arithmetic mutators
 
-  public V2 add(V2 v)
+  /**
+   * Add a vector to this one.
+   *
+   * @param amount the vector to be added.
+   * @return this, so that multiple operations can be queued.
+   */
+  public V2 add(V2 amount)
   {
-    return xy(x + v.x, y + v.y);
+    return xy(x + amount.x, y + amount.y);
   }
 
-  public V2 sub(V2 v)
+  /**
+   * Subtract a vector from this one.
+   *
+   * @param amount the vector to be added.
+   * @return this, so that multiple operations can be queued.
+   */
+  public V2 sub(V2 amount)
   {
-    return xy(x - v.x, y - v.y);
+    return xy(x - amount.x, y - amount.y);
   }
 
-  public V2 scale(V2 v)
+  /**
+   * Multiply a vector element-wise by another.
+   *
+   * @param multiplier a vector containing the values that the abscissa (x) and
+   * ordinate (y) of this vector will be multiplied by.
+   * @return this, so that multiple operations can be queued.
+   */
+  public V2 scale(V2 multiplier)
   {
-    return xy(x * v.x, y * v.y);
+    return xy(x * multiplier.x, y * multiplier.y);
   }
   // geometric mutators
 
+  /**
+   * Rotate the vector 90 degrees to the left (a right-angle): this is a very
+   * cheap operation, while custom rotations are expensive.
+   *
+   * @return this, so that multiple operations can be queued.
+   * @see <a href="V2#addAngle(float)">addAngle</a>
+   */
   public V2 left()
   {
     return xy(y, -x);
   }
 
+  /**
+   * Rotate the vector 90 degrees to the right (a right-angle): this is a very
+   * cheap operation, while custom rotations are expensive.
+   *
+   * @return this, so that multiple operations can be queued.
+   * @see <a href="V2#addAngle(float)">addAngle</a>
+   */
   public V2 right()
   {
     return xy(-y, x);
   }
 
+  /**
+   * Set the norm, magnitude or length of the vector.
+   *
+   * @param amount the new norm, magnitude or length.
+   * @return this, so that multiple operations can be queued.
+   */
   public V2 norm(float amount)
   {
     return xy(x / norm() * amount, y / norm() * amount);
   }
 
+  /**
+   * Add a real value to the norm of the vector to make it longer or shorter.
+   *
+   * @param amount the amount to be added to the norm.
+   * @return this, so that multiple operations can be queued.
+   */
   public V2 addNorm(float amount)
   {
     return norm(norm() + amount);
   }
 
+  /**
+   * Set the norm of the vector to 1.
+   *
+   * @return this, so that multiple operations can be queued.
+   */
   public V2 normalise()
   {
     return (norm(1 / norm()));
   }
 
+  /**
+   * Rotate the vector clockwise around the origin: this requires trigonometric
+   * functions so is expensive.
+   *
+   * @param angle the angle, in radians, to rotate the vector.
+   * @return this, so that multiple operations can be queued.
+   * @see <a href="V2#left()">left</a> or <a href="V2#right()">right</a>
+   */
   public V2 addAngle(float angle)
   {
     double cos = Math.cos(angle), sin = Math.sin(angle);

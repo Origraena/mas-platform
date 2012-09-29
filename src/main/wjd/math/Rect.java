@@ -189,6 +189,12 @@ public class Rect
   {
     return ("(" + x + ',' + y + ',' + w + ',' + h + ')');
   }
+  
+  @Override
+  public Rect clone()
+  {
+    return new Rect(x, y, w, h);
+  }
 
   // query
   /**
