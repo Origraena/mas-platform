@@ -25,7 +25,7 @@ public abstract class AbstractActor implements Actor {
 		return _body;
 	}
 
-	@Override public abstract Influence act();
+	@Override public abstract Influence act(float t_delta);
 
 	@Override public abstract AbstractActor clone();
 

@@ -53,11 +53,14 @@ public class MovementActor extends AbstractActor {
 	}
 
 	@Override 
-	public MovementInfluence act() {
+	public MovementInfluence act(float t_delta) {
 		if (_speed <= 0)
 			return null;
-		int x = (int)Math.floor(Math.cos(Math.toRadians(_angle))*((double)_speed));
-		int y = (int)Math.floor(Math.sin(Math.toRadians(_angle))*((double)_speed));
+		int x = 
+      (int)Math.floor(Math.cos(Math.toRadians(_angle))*((double)_speed*t_delta));
+		int y = 
+      (int)Math.floor(Math.sin(Math.toRadians(_angle))*((double)_speed*t_delta));
+    
 		return new MovementInfluence(this,this.body(),new Point(x,y));
 	}
 

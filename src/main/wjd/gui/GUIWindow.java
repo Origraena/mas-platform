@@ -89,7 +89,7 @@ public class GUIWindow extends LWJGLWindow
     body.set(Properties.FEED_MIN, new Integer(0));
     body.set(Properties.FEED_MAX, new Integer(100));
     body.translate(new Point(100, 100));
-    body.addActor(new MovementActor(body, 5));
+    body.addActor(new MovementActor(body, 4));
     body.addSensor(new ShapeSensor(body, new Circle(0, 0, 150)));
     // attach a simple mind and add to the world
     world.add(new Agent(new StateMachineMind(new PatrolState()), body));
@@ -102,8 +102,8 @@ public class GUIWindow extends LWJGLWindow
     body.set(Properties.FEED, new Integer(100));
     body.set(Properties.FEED_MIN, new Integer(0));
     body.set(Properties.FEED_MAX, new Integer(100));
-    body.translate(new Point(100, 120));
-    body.addActor(new MovementActor(body, 10));
+    body.translate(new Point(500, 400));
+    body.addActor(new MovementActor(body, 8));
     body.addActor(new EatActor(body, 10));
     body.addSensor(new ShapeSensor(body, new Circle(0, 0, 100)));
     // attach a simple mind and add to the world
@@ -112,9 +112,9 @@ public class GUIWindow extends LWJGLWindow
 
   // overrides
   @Override
-  protected void update(long t_delta)
+  protected void update(int t_delta)
   {
-    world.tick();
+    world.tick(t_delta/1000.f);
   }
 
   @Override

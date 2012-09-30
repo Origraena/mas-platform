@@ -40,7 +40,7 @@ public abstract class LWJGLWindow
   private int width, height;
   private final String name;
   // timing
-  private long t_previous;
+  private long t_previous = -1; // uninitialised
 
   /* METHODS */
   // creation and destruction
@@ -171,7 +171,7 @@ public abstract class LWJGLWindow
    *
    * @param t_delta number of milliseconds since the last update.
    */
-  protected abstract void update(long t_delta);
+  protected abstract void update(int t_delta);
 
   /**
    * Treat any Keyboard events that might has occurred.
@@ -240,7 +240,7 @@ public abstract class LWJGLWindow
   private int timeDelta()
   {
     long t_now = timeNow();
-    int t_delta = (int) (t_now - t_previous);
+    int t_delta = (t_previous < 0) ? 0 : (int) (t_now - t_previous);
     t_previous = t_now;
     return t_delta;
   }

@@ -28,9 +28,9 @@ public class World implements Iterable<Agent>,Reportable {
 		_scene = s;
 	}
 	
-	public void tick() {
+	public void tick(float t_delta) {
 		for (Agent a : this)
-			_heart.submitInfluence(a.tick(this));
+			_heart.submitInfluence(a.tick(this, t_delta));
 		_heart.pulse();
 	}
 

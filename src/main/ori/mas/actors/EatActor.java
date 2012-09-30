@@ -15,7 +15,7 @@ public class EatActor extends AbstractActor {
 	}
 
 	@Override
-	public MultipleInfluence act() {
+	public MultipleInfluence act(float t_delta) {
 		MultipleInfluence result = new MultipleInfluence();
 		result.add(new DeathInfluence(this,this.target()));
 		result.add(new ChangeBodyIntegerPropertyInfluence(this,this.body(),Properties.FEED,new Integer(_feedInc)));

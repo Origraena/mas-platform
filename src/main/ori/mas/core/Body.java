@@ -29,10 +29,10 @@ public class Body extends AdaptedShape implements Reportable {
 		_agent = agent;
 	}
 
-	public Influence act() {
+	public Influence act(float t_delta) {
 		if (_preparedActor == null)
 			return null;
-		Influence res = _preparedActor.act();
+		Influence res = _preparedActor.act(t_delta);
 		_preparedActor = null;
 		return res;
 	}

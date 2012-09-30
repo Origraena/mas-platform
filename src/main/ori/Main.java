@@ -1,17 +1,15 @@
 package ori;
 
-import ori.ogapi.report.PrintReporter;
-import ori.ogapi.geometry.Rectangle;
-import ori.ogapi.geometry.Point;
-import ori.ogapi.geometry.Circle;
-import ori.ogapi.geometry.LinkedListSurface;
-import ori.mas.core.*;
+import java.io.PrintWriter;
 import ori.mas.actors.*;
-import ori.mas.sensors.*;
+import ori.mas.core.*;
 import ori.mas.fsm.*;
 import ori.mas.fsm.states.*;
-
-import java.io.PrintWriter;
+import ori.mas.sensors.*;
+import ori.ogapi.geometry.Circle;
+import ori.ogapi.geometry.LinkedListSurface;
+import ori.ogapi.geometry.Point;
+import ori.ogapi.report.PrintReporter;
 
 public class Main {
 
@@ -77,7 +75,7 @@ public class Main {
 		final int nbTicks = 100;
 		for (int tick = 0 ; tick < nbTicks ; tick++)  {
 			//System.out.println("tick = "+tick);
-			w.tick();
+			w.tick(1000/60);
 			p1.println(""+b1.center().x+" "+b1.center().y);
 			p2.println(""+b2.center().x+" "+b2.center().y);
 ////		for (int y = -20 ; y < 20 ; y++) {
