@@ -103,6 +103,10 @@ public class Body extends AdaptedShape implements Reportable {
 		return _properties.put(property,value);
 	}
 
+	public boolean has(String property) {
+		return (this.get(property) != null);
+	}
+
 	@Override
 	public void reportIn(Reporter out) {
 		out.newSection(hashCode()+"@Body{\n");
