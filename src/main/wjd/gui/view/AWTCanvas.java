@@ -93,7 +93,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void circle(V2 centre, float radius)
   {
-    shapes.add(new Ellipse2D.Float(100, 100, radius*2, radius*2));
+    shapes.add(new Ellipse2D.Float(centre.x(), centre.y(), radius*2, radius*2));
   }
 
   /**
@@ -134,7 +134,6 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void paintComponent(Graphics g)
   {
-    System.out.println("painting " + shapes.size() + " shapes");
     // Get the graphics object
     Graphics2D g2d = (Graphics2D)g;
     

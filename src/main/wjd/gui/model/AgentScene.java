@@ -76,7 +76,7 @@ public class AgentScene implements IWindow.IScene
     body.set(Properties.FEED, new Integer(100));
     body.set(Properties.FEED_MIN, new Integer(0));
     body.set(Properties.FEED_MAX, new Integer(100));
-    body.translate(new Point(100, 100));
+    body.translate(new Point(600, 800));
     body.addActor(new MovementActor(body, 4));
     body.addSensor(new ShapeSensor(body, new Circle(0, 0, 150)));
     // attach a simple mind and add to the world
@@ -90,7 +90,7 @@ public class AgentScene implements IWindow.IScene
     body.set(Properties.FEED, new Integer(100));
     body.set(Properties.FEED_MIN, new Integer(0));
     body.set(Properties.FEED_MAX, new Integer(100));
-    body.translate(new Point(500, 400));
+    body.translate(new Point(4000, 2500));
     body.addActor(new MovementActor(body, 8));
     body.addActor(new EatActor(body, 10));
     body.addSensor(new ShapeSensor(body, new Circle(0, 0, 100)));

@@ -249,7 +249,7 @@ public class Camera implements IInteractive
     V2 mouse_pos = input.getMousePosition(window_size); 
 
     // mouse near edges = pan
-    V2 scroll_dir = new V2();
+    /*V2 scroll_dir = new V2();
     if (mouse_pos.x() < SCOLL_MOUSE_DISTANCE)
       scroll_dir.x(-1);
     else if (mouse_pos.x() > window_size.x() - SCOLL_MOUSE_DISTANCE)
@@ -258,7 +258,7 @@ public class Camera implements IInteractive
       scroll_dir.y(-1);
     else if (mouse_pos.y() > window_size.y() - SCOLL_MOUSE_DISTANCE)
       scroll_dir.y(1);
-    pan(scroll_dir.scale(SCROLL_SPEED));
+    pan(scroll_dir.scale(SCROLL_SPEED));*/
 
     // mouse wheel = zoom
     int wheel = input.getMouseWheelDelta();

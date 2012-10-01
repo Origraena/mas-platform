@@ -22,6 +22,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import org.lwjgl.LWJGLException;
 import wjd.gui.control.AWTInput;
+import wjd.gui.control.EUpdateResult;
 import wjd.gui.control.IInput;
 import wjd.gui.view.AWTCanvas;
 import wjd.gui.view.Camera;
@@ -100,7 +101,9 @@ public class AWTWindow extends JFrame implements IWindow
       // deal with input
       camera.processInput(input, size);
       scene.processInput(input, size);
-      
+      // update
+      if(scene.update(1000/60) == EUpdateResult.STOP) // FIXME
+          running = false;
       // queue rendering
       scene.render(canvas, camera);
       repaint();
