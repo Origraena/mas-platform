@@ -1,8 +1,3 @@
-package wjd.gui.view;
-
-import wjd.math.Rect;
-import wjd.math.V2;
-
 /*
  Copyright (C) 2012 William James Dyce
 
@@ -19,6 +14,12 @@ import wjd.math.V2;
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package wjd.gui.view;
+
+import wjd.math.Rect;
+import wjd.math.V2;
+
 /**
  * A collection of abstract drawing functions to render primitives (circles,
  * boxes and so-on).

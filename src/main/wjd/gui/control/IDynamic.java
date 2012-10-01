@@ -16,8 +16,6 @@
  */
 package wjd.gui.control;
 
-import wjd.gui.control.EUpdateResult;
-
 /** 
 * @author wdyce
 * @since 01-Oct-2012

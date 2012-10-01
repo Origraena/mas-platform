@@ -16,9 +16,6 @@
  */
 package wjd.gui.view;
 
-import wjd.gui.view.Camera;
-import wjd.gui.view.ICanvas;
-
 /** 
 * @author wdyce
 * @since 01-Oct-2012

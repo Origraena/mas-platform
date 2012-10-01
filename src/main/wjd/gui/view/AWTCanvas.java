@@ -17,7 +17,6 @@
 
 package wjd.gui.view;
 
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -27,8 +26,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.Queue;
 import javax.swing.JPanel;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.TrueTypeFont;
 import wjd.math.Rect;
 import wjd.math.V2;
 

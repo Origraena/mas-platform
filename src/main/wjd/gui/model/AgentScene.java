@@ -16,7 +16,6 @@
  */
 package wjd.gui.model;
 
-import wjd.gui.control.EUpdateResult;
 import ori.mas.actors.EatActor;
 import ori.mas.actors.MovementActor;
 import ori.mas.core.AdaptedScene;
@@ -33,6 +32,7 @@ import ori.ogapi.geometry.Circle;
 import ori.ogapi.geometry.LinkedListSurface;
 import ori.ogapi.geometry.Point;
 import ori.ogapi.util.Iterator;
+import wjd.gui.control.EUpdateResult;
 import wjd.gui.control.IInput;
 import wjd.gui.view.Camera;
 import wjd.gui.view.ICanvas;
