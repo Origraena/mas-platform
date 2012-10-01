@@ -23,78 +23,60 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
-import wjd.gui.view.GLPaintbrush;
+import wjd.math.V2;
 
 /**
  * Basic Light-weight Java Game Library (LWJGL) holder class which creates a
- * Window and OpenGL canvas we can use to draw on.
+ * IWindow and OpenGL canvas we can use to draw on.
  *
  * @author wdyce
  * @since 16-Feb-2012
  * @see <a href="http://lwjgl.org/">LWJGL Home Page</a>
  */
-public abstract class LWJGLWindow extends Window
+public abstract class LWJGLWindow implements IWindow
 {
   /* ATTRIBUTES */
+  // window
+  private V2 size;
+  private String name;
   // timing
   private long t_previous = -1; // uninitialised
 
   /* METHODS */
-  // creation and destruction
-  /**
-   * Prepare the Window to be created with the given parameters: it will not
-   * actually be created until <a href="LWJGLWindow#create()">create</a> is
-   * called.
-   *
-   * @see LWJGLWindow#create()
-   * @param name the String of characters to be displayed at the top of the
-   * Window (NB - the name java is still used to identify the process itself).
-   * @param width the width of the Window, in pixels.
-   * @param height the height of the Window, in pixels.
-   */
-  public LWJGLWindow(String name, int width, int height)
-  {
-    super(name, width, height);
-  }
+  
+  // life-cycle
 
   /**
-   * Create the Window and OpenGL canvas based on the size and other parameters
-   * that were given to the constructor.
+   * Create a LWJGL Display of the given size, with a corresponding OpenGL 
+   * canvas.
    *
+   * @param name the String of characters to be displayed at the top of the
+   * IWindow (NB - the name java is still used to identify the process itself).
+   * @param width the width of the IWindow, in pixels.
+   * @param height the height of the IWindow, in pixels.
    * @throws LWJGLException if native libraries are not found, graphics card or
    * drivers do not support hardware rendering...
    */
-  public void create() throws LWJGLException
+  @Override
+  public void create(String name, V2 size) throws LWJGLException
   {
+    // Save argument
+    this.name = name;
+    this.size = size.floor();
     // Display
-    Display.setDisplayMode(new DisplayMode(getHeight(), getWidth()));
+    Display.setDisplayMode(new DisplayMode((int)size.x(), (int)size.y()));
     Display.setFullscreen(false);
-    Display.setTitle(getName());
+    Display.setTitle(name);
     Display.create();
     Display.setResizable(true);
-
     // Keyboard
     Keyboard.create();
     Keyboard.enableRepeatEvents(false);
-
     // Mouse
     Mouse.setGrabbed(false);
     Mouse.create();
-
-    //OpenGL
-    GLPaintbrush.init();
+    // OpenGL
     resizeGL();
-  }
-
-  /**
-   * Clean up anything we might have allocated.
-   */
-  public void destroy()
-  {
-    // these methods already check if created before destroying
-    Mouse.destroy();
-    Keyboard.destroy();
-    Display.destroy();
   }
 
   // launch and update
@@ -136,6 +118,18 @@ public abstract class LWJGLWindow extends Window
       Display.sync(60);   // 60 frames per second
     }
   }
+  
+  /**
+   * Clean up anything we might have allocated.
+   */
+  @Override
+  public void destroy()
+  {
+    // these methods already check if created before destroying
+    Mouse.destroy();
+    Keyboard.destroy();
+    Display.destroy();
+  }
 
   /* SUBROUTINES */
   // update and input
@@ -153,7 +147,7 @@ public abstract class LWJGLWindow extends Window
   protected abstract void processKeyboard();
 
   /**
-   * Treat any Window events that might has occurred.
+   * Treat any IWindow events that might has occurred.
    */
   protected abstract void processMouse();
 
@@ -178,11 +172,11 @@ public abstract class LWJGLWindow extends Window
   protected void resizeGL()
   {
     //Here we are using a 2D Scene
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, (int)size.x(), (int)size.y());
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, width, height, 0, -1, 1);
+    glOrtho(0, size.x(), size.y(), 0, -1, 1);
     glPushMatrix();
 
     glMatrixMode(GL_MODELVIEW);
@@ -191,16 +185,15 @@ public abstract class LWJGLWindow extends Window
   }
 
   /**
-   * Treat any Window events that might has occurred, for instance minimisation
-   * or resizing of the Window.
+   * Treat any IWindow events that might has occurred, for instance minimisation
+   * or resizing of the IWindow.
    */
   private void processWindow()
   {
     // check if window was resized
     if (Display.wasResized())
     {
-      width = Display.getWidth();
-      height = Display.getHeight();
+      size.xy(Display.getWidth(), Display.getHeight());
       resizeGL();
     }
   }

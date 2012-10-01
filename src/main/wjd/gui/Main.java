@@ -60,8 +60,8 @@ abstract class Main
     try
     {
       // create the window
-      window = new GUIWindow(WIN_NAME, WIN_W, WIN_H);
-      window.create(); // throws LWJGL exception
+      window = new WindowContent();
+      window.create(WIN_NAME, WIN_W, WIN_H); // throws exception
       window.run();
     }
     catch (Exception ex)

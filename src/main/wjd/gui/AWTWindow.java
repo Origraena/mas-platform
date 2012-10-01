@@ -20,37 +20,45 @@ package wjd.gui;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
+import wjd.math.V2;
 
 /** 
- * Application using Window AWT: only use this version if your computer does not 
+ * Application using IWindow AWT: only use this version if your computer does not 
  * support hardware accelerated graphics!
  * 
  * @author wdyce 
  * @since 25 Jan, 2012
  */
-public class AWTWindow extends JFrame implements Window
+public class AWTWindow extends JFrame implements IWindow
 {
   /* CONSTANTS */
 
   /* ATTRIBUTES */ 
-  // JFrame
-  private int width, height;
-  private final String name;
   // JPanel
   private AWTCanvas canvas;
 
   /* METHODS */
 
-  // creation
-  private AWTWindow(String name, int width, int height)
+  // life-cycle
+  
+  /**
+   * Create the AWT JFrame Window of the given size, with a corresponding JPanel 
+   * canvas.
+   *
+   * @param name the String of characters to be displayed at the top of the
+   * IWindow (NB - the name java is still used to identify the process itself).
+   * @param width the width of the IWindow, in pixels.
+   * @param height the height of the IWindow, in pixels.
+   * @throws LWJGLException if native libraries are not found, graphics card or
+   * drivers do not support hardware rendering...
+   */
+  @Override
+  public void create(String name, V2 size)
   {
-    this.name = name;
-    this.width = width;
-    this.height = height;
     // Set up AWT window
     setTitle(name);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setSize(width, height);
+    setSize((int)size.x(), (int)size.y());
     setResizable(false);
     setLocationRelativeTo(null);    // move to center of screen
     // Content
@@ -60,7 +68,6 @@ public class AWTWindow extends JFrame implements Window
     setVisible(true);
   }
 
-  // launch and update
   /**
    * Launch the application and run until some event interrupts its execution.
    */
@@ -71,29 +78,31 @@ public class AWTWindow extends JFrame implements Window
     boolean running = true;
     while(running)
     {
-        // Do update
-        running = canvas.update();
+      // Do update
+      running = canvas.update();
 
-        // Catch exceptions
-        try
-        {
-            // Leave some time for other threads
-            Thread.sleep(1000/MAX_FPS);
-        } 
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
+      // Catch exceptions
+      try
+      {
+        // Leave some time for other threads
+        Thread.sleep(1000/MAX_FPS);
+      } 
+      catch (InterruptedException e)
+      {
+        e.printStackTrace();
+      }
     }
 
     // End of the loop : close the window
     WindowEvent e = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
     Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(e);
   }
-
+  
+  /**
+   * Clean up anything we might have allocated.
+   */
   @Override
-  public Window <error>(String name, int width, int height)
+  public void destroy()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
   }
 }

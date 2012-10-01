@@ -44,7 +44,7 @@ import wjd.math.V2;
  * @author wdyce
  * @since Sep 27, 2012
  */
-public class GUIWindow extends LWJGLWindow
+public class WindowContent
 {
   /// CONSTANTS
   private static final int SCOLL_MOUSE_DISTANCE = 48;
@@ -59,11 +59,8 @@ public class GUIWindow extends LWJGLWindow
 
   /// METHODS
   // construction
-  public GUIWindow(String name, int width, int height)
+  public WindowContent(String name, int width, int height)
   {
-    // save variables
-    super(name, width, height);
-
     // create view
     view = new Camera(new V2(width, height), null);
 
