@@ -24,13 +24,13 @@ import wjd.math.Rect;
 import wjd.math.V2;
 
 /**
- * A collection of static drawing factions to render primitives (circles, boxes
+ * A collection of drawing functions to render primitives (circles, boxes
  * and so-on) using OpenGL.
  *
  * @author wdyce
  * @date 16-Feb-2012
  */
-public abstract class DrawGL
+public abstract class GLPaintbrush
 {
   /// CLASS NAMESPACE CONSTANTS
   private static final int CIRCLE_BASE_SEGMENTS = 6;
@@ -174,7 +174,7 @@ public abstract class DrawGL
    * @param position the position on the screen to draw the String.
    * @param colour the Colour to be used to draw the String.
    */
-  public static void text(String string, V2 position, Colour colour)
+  public void text(String string, V2 position, Colour colour)
   {
     glEnable(GL_BLEND);
     font.drawString(position.x(), position.y(), string,

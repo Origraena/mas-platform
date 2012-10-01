@@ -23,7 +23,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
-import wjd.gui.view.DrawGL;
+import wjd.gui.view.GLPaintbrush;
 
 /**
  * Basic Light-weight Java Game Library (LWJGL) holder class which creates a
@@ -87,7 +87,7 @@ public abstract class LWJGLWindow
     Mouse.create();
 
     //OpenGL
-    DrawGL.init();
+    GLPaintbrush.init();
     resizeGL();
   }
 

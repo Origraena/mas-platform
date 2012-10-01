@@ -35,7 +35,7 @@ import ori.ogapi.geometry.LinkedListSurface;
 import ori.ogapi.geometry.Point;
 import ori.ogapi.util.Iterator;
 import wjd.gui.view.Camera;
-import wjd.gui.view.DrawGL;
+import wjd.gui.view.GLPaintbrush;
 import wjd.math.V2;
 
 /**
@@ -128,12 +128,12 @@ public class GUIWindow extends LWJGLWindow
     while (itr.hasNext())
     {
       Point pos = ((Agent) itr.next()).body().center();
-      DrawGL.circle(view.getPerspective(new V2(pos.x, pos.y)), 8 * view.
+      GLPaintbrush.circle(view.getPerspective(new V2(pos.x, pos.y)), 8 * view.
         getZoom());
     }
 
     // draw hello text
-    DrawGL.text(HELLO_TEXT, view.getPerspective(HELLO_POS));
+    GLPaintbrush.text(HELLO_TEXT, view.getPerspective(HELLO_POS));
   }
 
   @Override
