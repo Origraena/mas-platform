@@ -22,12 +22,17 @@ package wjd.gui;
 */
 public interface IDynamic 
 {  
+  /* METHODS */
+  
   /**
    * Update the object a variable amount based on the specified delta-time.
    * 
    * @param t_delta the number of milliseconds that have elapsed.
+   * @return a value indicating the result of the update, generally 
+   * <a href="EUpdateResult#CONTINUE">CONTINUE</a> if nothing out of the 
+   * ordinary has happened.
    */
-  public void update(int t_delta);
+  public EUpdateResult update(int t_delta);
   
   
 }

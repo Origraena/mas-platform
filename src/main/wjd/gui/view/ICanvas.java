@@ -26,7 +26,7 @@ import wjd.math.V2;
  * @author wdyce
  * @since Aug 1, 2012
  */
-public interface IPaintbrush
+public interface ICanvas
 {
   // setup functions
   /**
@@ -35,7 +35,7 @@ public interface IPaintbrush
    * @param colour the new Colour to be used to draw objects from now on.
    * @return a reference to this, so multiple operations can be queued.
    */
-  public IPaintbrush setColour(Colour colour);
+  public ICanvas setColour(Colour colour);
 
   /**
    * Set the line width to be used for all future drawing operations.
@@ -43,7 +43,7 @@ public interface IPaintbrush
    * @param colour the new Colour to be used to draw objects from now on.
    * @return a reference to this, so multiple operations can be queued.
    */
-  public IPaintbrush setLineWidth(float lineWidth);
+  public ICanvas setLineWidth(float lineWidth);
 
   /**
    * Set the text font to be used for all future drawing operations.
@@ -51,9 +51,15 @@ public interface IPaintbrush
    * @param font the new font Object to be used.
    * @return a reference to this, so multiple operations can be queued.
    */
-  public IPaintbrush setFont(Object font);
+  public ICanvas setFont(Object font);
 
   // drawing functions
+  
+  /**
+   * Clear the screen.
+   */
+  public void clear();
+  
   /**
    * Draw a circle outline around the specified position, using the given
    * radius.

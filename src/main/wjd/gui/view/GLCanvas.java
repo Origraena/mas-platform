@@ -30,22 +30,22 @@ import wjd.math.V2;
  * @author wdyce
  * @since 16-Feb-2012
  */
-public class GLPaintbrush implements IPaintbrush
+public class GLCanvas implements ICanvas
 {
   /* CONSTANTS */
   private static final int CIRCLE_BASE_SEGMENTS = 6;
   
   /* SINGLETON */
-  private GLPaintbrush instance;
-  public GLPaintbrush getInstance()
+  private static GLCanvas instance;
+  public static GLCanvas getInstance()
   {
     if(instance == null)
-      instance = new GLPaintbrush();
+      instance = new GLCanvas();
     return instance;
   }
   
   /* ATTRIBUTES */
-  private org.newdawn.slick.Color slickColour;
+  private org.newdawn.slick.Color slickColour = Color.black;
   private TrueTypeFont font;
 
   /* METHODS */
@@ -54,7 +54,7 @@ public class GLPaintbrush implements IPaintbrush
    * Set up the OpenGL state machine for drawing, including setting clear colour
    * and depth, and enabling/disabling various options (namely 3D).
    */
-  private GLPaintbrush()
+  private GLCanvas()
   {
     // background colour and depth
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -68,13 +68,13 @@ public class GLPaintbrush implements IPaintbrush
     // we need blending (alpha) for drawing strings
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // load a default java font
+    // load a default font
     font = new TrueTypeFont(new Font("Arial", Font.PLAIN, 12), false);
   }
 
   // setup functions
   @Override
-  public IPaintbrush setColour(Colour colour)
+  public ICanvas setColour(Colour colour)
   {
     slickColour = new Color(colour.r, colour.g, colour.b, colour.a);
     glColor3f(colour.r, colour.b, colour.g);
@@ -82,14 +82,14 @@ public class GLPaintbrush implements IPaintbrush
   }
 
   @Override
-  public IPaintbrush setLineWidth(float lineWidth)
+  public ICanvas setLineWidth(float lineWidth)
   {
     glLineWidth(lineWidth);
     return this;
   }
 
   @Override
-  public IPaintbrush setFont(Object new_font)
+  public ICanvas setFont(Object new_font)
   {
     if (new_font instanceof TrueTypeFont)
       font = (TrueTypeFont) new_font;
@@ -97,6 +97,16 @@ public class GLPaintbrush implements IPaintbrush
   }
 
   // drawing functions
+  /**
+   * Clear the screen.
+   */
+  @Override
+  public void clear()
+  {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
+  }
+  
   /**
    * Draw a circle outline around the specified position, using the given
    * radius.

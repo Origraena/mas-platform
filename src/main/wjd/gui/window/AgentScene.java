@@ -14,10 +14,8 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.gui;
+package wjd.gui.window;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import ori.mas.actors.EatActor;
 import ori.mas.actors.MovementActor;
 import ori.mas.core.AdaptedScene;
@@ -34,45 +32,36 @@ import ori.ogapi.geometry.Circle;
 import ori.ogapi.geometry.LinkedListSurface;
 import ori.ogapi.geometry.Point;
 import ori.ogapi.util.Iterator;
+import wjd.gui.EUpdateResult;
 import wjd.gui.view.Camera;
-import wjd.gui.view.GLPaintbrush;
+import wjd.gui.view.ICanvas;
 import wjd.math.V2;
 
 /**
- * Window manager of the Graphical User Interface of our Multi-agent simulation.
+ * An IScene in which agent go about the business.
  *
  * @author wdyce
  * @since Sep 27, 2012
  */
-public class WindowContent
+public class AgentScene implements IWindow.IScene
 {
-  /// CONSTANTS
-  private static final int SCOLL_MOUSE_DISTANCE = 48;
-  private static final int SCROLL_SPEED = 6;
-  private static final float ZOOM_SPEED = 0.001f;
   /// TODO -- remove this
   private static final V2 HELLO_POS = new V2(100, 100);
   private static final String HELLO_TEXT = "Hello Agents!";
-  /// ATTRIBUTES
-  private Camera view;
+  
+  /* ATTRIBUTES */
   private World world;
 
   /// METHODS
   // construction
-  public WindowContent(String name, int width, int height)
+  public AgentScene()
   {
-    // create view
-    view = new Camera(new V2(width, height), null);
-
     // start up
     reset();
   }
 
   private void reset()
   {
-    // reset view
-    view.reset();
-
     // create the world
     world = new World(new DefaultHeart(),
       new AdaptedScene(new LinkedListSurface<Body>()));
@@ -109,79 +98,49 @@ public class WindowContent
 
   // overrides
   @Override
-  protected void update(int t_delta)
+  public EUpdateResult update(int t_delta)
   {
+    // update the clear
     world.tick();
+    
+    // all clear !
+    return EUpdateResult.CONTINUE;
   }
 
   @Override
-  protected void render()
+  public void render(ICanvas canvas, Camera camera)
   {
-    // standard stuff
-    super.render();
-
+    // clear the screen
+    canvas.clear();
+    
     // draw agents
     Iterator itr = world.iterator();
     while (itr.hasNext())
     {
       Point pos = ((Agent) itr.next()).body().center();
-      GLPaintbrush.circle(view.getPerspective(new V2(pos.x, pos.y)), 8 * view.
-        getZoom());
+      canvas.circle(camera.getPerspective(new V2(pos.x, pos.y)), 
+                                            8 * camera.getZoom());
     }
 
     // draw hello text
-    GLPaintbrush.text(HELLO_TEXT, view.getPerspective(HELLO_POS));
+    canvas.text(HELLO_TEXT, camera.getPerspective(HELLO_POS));
   }
 
   @Override
-  protected void processKeyboard()
+  public EUpdateResult processKeyboard()
   {
-    // get arrow-key input
-    V2 key_dir = new V2(0, 0);
-    if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-      key_dir.yadd(1);
-    if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-      key_dir.yadd(-1);
-    if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-      key_dir.xadd(1);
-    if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-      key_dir.xadd(-1);
-
-    // move the view
-    view.pan(key_dir.scale(SCROLL_SPEED));
+    // TODO
+    
+    // all clear !
+    return EUpdateResult.CONTINUE;
   }
 
   @Override
-  protected void processMouse()
+  public EUpdateResult processMouse(V2 window_size)
   {
-    // mouse position
-    V2 mouse_pos = new V2(Mouse.getX(), getHeight() - Mouse.getY());
-
-    // mouse near edges = pan
-    V2 scroll_dir = new V2();
-    if (mouse_pos.x() < SCOLL_MOUSE_DISTANCE)
-      scroll_dir.x(-1);
-    else if (mouse_pos.x() > getWidth() - SCOLL_MOUSE_DISTANCE)
-      scroll_dir.x(1);
-    if (mouse_pos.y() < SCOLL_MOUSE_DISTANCE)
-      scroll_dir.y(-1);
-    else if (mouse_pos.y() > getHeight() - SCOLL_MOUSE_DISTANCE)
-      scroll_dir.y(1);
-    view.pan(scroll_dir.scale(SCROLL_SPEED));
-
-    // mouse wheel = zoom
-    int wheel = Mouse.getDWheel();
-    if (wheel != 0)
-      view.zoom(wheel * ZOOM_SPEED, mouse_pos);
-  }
-
-  @Override
-  protected void resizeGL()
-  {
-    // standard stuff
-    super.resizeGL();
-
-    // resize camera viewport too
-    view.setCanvasSize(new V2(getWidth(), getHeight()));
+    // TODO
+    
+    // all clear !
+    return EUpdateResult.CONTINUE;
   }
 }

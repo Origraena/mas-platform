@@ -14,7 +14,7 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.gui;
+package wjd.gui.window;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -23,6 +23,9 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
+import wjd.gui.EUpdateResult;
+import wjd.gui.view.Camera;
+import wjd.gui.view.GLCanvas;
 import wjd.math.V2;
 
 /**
@@ -33,12 +36,15 @@ import wjd.math.V2;
  * @since 16-Feb-2012
  * @see <a href="http://lwjgl.org/">LWJGL Home Page</a>
  */
-public abstract class LWJGLWindow implements IWindow
+public class LWJGLWindow implements IWindow
 {
   /* ATTRIBUTES */
   // window
   private V2 size;
-  private String name;
+  private IScene scene;
+  // drawing
+  private GLCanvas glCanvas;
+  private Camera camera;
   // timing
   private long t_previous = -1; // uninitialised
 
@@ -58,21 +64,24 @@ public abstract class LWJGLWindow implements IWindow
    * drivers do not support hardware rendering...
    */
   @Override
-  public void create(String name, V2 size) throws LWJGLException
+  public void create(String name, V2 size, IScene scene) throws LWJGLException
   {
-    // Save argument
-    this.name = name;
+    // Save parameters
     this.size = size.floor();
-    // Display
+    this.scene = scene;
+    // LWJGL - Display
     Display.setDisplayMode(new DisplayMode((int)size.x(), (int)size.y()));
     Display.setFullscreen(false);
     Display.setTitle(name);
     Display.create();
     Display.setResizable(true);
-    // Keyboard
+    // Don't initialise GLCanvas until the display is ready
+    glCanvas = GLCanvas.getInstance();
+    camera = new Camera(size, null); // null => no boundary
+    // LWJGL - Keyboard
     Keyboard.create();
     Keyboard.enableRepeatEvents(false);
-    // Mouse
+    // LWJGL - Mouse
     Mouse.setGrabbed(false);
     Mouse.create();
     // OpenGL
@@ -86,25 +95,29 @@ public abstract class LWJGLWindow implements IWindow
   @Override
   public void run()
   {
-    while (!Display.isCloseRequested()
-      && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
+    boolean running = true;
+    while(running)
     {
       // don't update if display is not in focus
       if (Display.isVisible())
       {
-        // deal with input
-        processKeyboard();
-        processMouse();
+        // deal with input - camera
+        camera.processKeyboard();
+        camera.processMouse(size);
+        // deal with input - scene
+        scene.processKeyboard();
+        scene.processMouse(size);
         processWindow();
         // update and redraw
-        update(timeDelta());
-        render();
+        if(scene.update(timeDelta()) == EUpdateResult.STOP)
+          running = false;
+        scene.render(glCanvas, camera);
       }
       else
       {
         // redraw screen if out of date
         if (Display.isDirty())
-          render();
+          scene.render(glCanvas, camera);
         try
         {
           Thread.sleep(100);
@@ -115,7 +128,11 @@ public abstract class LWJGLWindow implements IWindow
         }
       }
       Display.update();
-      Display.sync(60);   // 60 frames per second
+      Display.sync(MAX_FPS);
+      
+      // check whether we should stop running
+      if(Display.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
+        running = false;
     }
   }
   
@@ -131,41 +148,6 @@ public abstract class LWJGLWindow implements IWindow
     Display.destroy();
   }
 
-  /* SUBROUTINES */
-  // update and input
-  /**
-   * Update the application based on the amount of time elapsed since the last
-   * update, in milliseconds.
-   *
-   * @param t_delta number of milliseconds since the last update.
-   */
-  protected abstract void update(int t_delta);
-
-  /**
-   * Treat any Keyboard events that might has occurred.
-   */
-  protected abstract void processKeyboard();
-
-  /**
-   * Treat any IWindow events that might has occurred.
-   */
-  protected abstract void processMouse();
-
-  // graphics
-  /**
-   * Draw whatever the application wants to draw onto the OpenGL canvas: but
-   * default just clear the canvas and reset the transform matrix.
-   */
-  protected void render()
-  {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glLoadIdentity();
-
-    /*
-     * RENDER CODE HERE
-     */
-  }
-
   /**
    * Resize the OpenGL canvas.
    */
@@ -173,15 +155,18 @@ public abstract class LWJGLWindow implements IWindow
   {
     //Here we are using a 2D Scene
     glViewport(0, 0, (int)size.x(), (int)size.y());
-
+    // projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, size.x(), size.y(), 0, -1, 1);
     glPushMatrix();
-
+    // model view
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glPushMatrix();
+    
+    // resize camera viewport too
+    camera.setCanvasSize(new V2((int)size.x(), (int)size.y()));
   }
 
   /**

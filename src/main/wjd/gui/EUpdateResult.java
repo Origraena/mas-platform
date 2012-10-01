@@ -16,11 +16,20 @@
  */
 package wjd.gui;
 
-/** 
-* @author wdyce
-* @seen 01-Oct-2012
-*/
-public interface IScene extends IDynamic, IVisible
+/**
+ * A value of this type is returned when certain objects are updated.
+ *
+ * @author wdyce
+ * @seen 01-Oct-2012
+ */
+public enum EUpdateResult
 {
-
-}
+  /**
+   * The default result of an update: continue as before.
+   */
+  CONTINUE,
+  /**
+   * The object calling the update should stop doing so.
+   */
+  STOP
+};

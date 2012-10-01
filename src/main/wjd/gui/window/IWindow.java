@@ -14,8 +14,11 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.gui;
+package wjd.gui.window;
 
+import wjd.gui.IDynamic;
+import wjd.gui.IInteractive;
+import wjd.gui.IVisible;
 import wjd.math.V2;
 
 /**
@@ -24,6 +27,10 @@ import wjd.math.V2;
  */
 public interface IWindow 
 {
+  /* NESTING */
+  
+  public interface IScene extends IDynamic, IVisible, IInteractive { }
+  
   /* CONSTANTS */
   
   public static final int MAX_FPS = 60;
@@ -38,10 +45,9 @@ public interface IWindow
    * IWindow (NB - the name java is still used to identify the process itself).
    * @param width the width of the IWindow, in pixels.
    * @param height the height of the IWindow, in pixels.
-   * @throws LWJGLException if native libraries are not found, graphics card or
-   * drivers do not support hardware rendering...
+   * @throws an Exception if there's or problem: this is optional.
    */
-  public void create(String name, V2 size) throws Exception;
+  public void create(String name, V2 size, IScene scene) throws Exception;
   
   /**
    * Launch the application and run until some event interrupts its execution.

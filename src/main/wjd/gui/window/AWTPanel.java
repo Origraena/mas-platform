@@ -15,7 +15,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package wjd.gui;
+package wjd.gui.window;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -26,14 +26,14 @@ import javax.swing.JPanel;
  * @author wdyce 
  * @since 25 Jan, 2012
  */
-public class AWTCanvas extends JPanel
+public class AWTPanel extends JPanel
 {
     /// ATTRIBUTES
 
     /// METHODS
 
     // creation
-    public AWTCanvas()
+    public AWTPanel()
     {
     }
 

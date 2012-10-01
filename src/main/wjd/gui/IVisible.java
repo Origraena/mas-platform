@@ -17,7 +17,7 @@
 package wjd.gui;
 
 import wjd.gui.view.Camera;
-import wjd.gui.view.IPaintbrush;
+import wjd.gui.view.ICanvas;
 
 /** 
 * @author wdyce
@@ -25,5 +25,5 @@ import wjd.gui.view.IPaintbrush;
 */
 public interface IVisible 
 {
-  public void render(IPaintbrush paintbrush, Camera camera);
+  public void render(ICanvas canvas, Camera camera);
 }

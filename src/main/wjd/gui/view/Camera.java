@@ -16,6 +16,10 @@
  */
 package wjd.gui.view;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import wjd.gui.EUpdateResult;
+import wjd.gui.IInteractive;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -27,9 +31,12 @@ import wjd.math.V2;
  * @author wdyce
  * @since 05-Mar-2012
  */
-public class Camera
+public class Camera implements IInteractive
 {
   /* CONSTANTS */
+  private static final int SCOLL_MOUSE_DISTANCE = 48;
+  private static final int SCROLL_SPEED = 6;
+  private static final float ZOOM_SPEED = 0.001f;
   private static final float ZOOM_MIN = 0.1f;
   private static final float ZOOM_MAX = 2.0f;
   /* ATTRIBUTES */
@@ -210,5 +217,56 @@ public class Camera
     }
     else if (overlap.y() > 0)
       view.y(boundary.y() - overlap.y() * 0.5f);
+  }
+
+  
+  /* IMPLEMENTATIONS */
+  
+  @Override
+  public EUpdateResult processKeyboard()
+  {
+    // get arrow-key input
+    V2 key_dir = new V2(0, 0);
+    if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+      key_dir.yadd(1);
+    if (Keyboard.isKeyDown(Keyboard.KEY_UP))
+      key_dir.yadd(-1);
+    if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+      key_dir.xadd(1);
+    if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+      key_dir.xadd(-1);
+    
+    // move the camera
+    pan(key_dir.scale(SCROLL_SPEED));
+    
+    // keep on keeping on :)
+    return EUpdateResult.CONTINUE;
+  }
+
+  @Override
+  public EUpdateResult processMouse(V2 window_size)
+  {
+    // mouse position
+    V2 mouse_pos = new V2(Mouse.getX(), window_size.y() - Mouse.getY());
+
+    // mouse near edges = pan
+    V2 scroll_dir = new V2();
+    if (mouse_pos.x() < SCOLL_MOUSE_DISTANCE)
+      scroll_dir.x(-1);
+    else if (mouse_pos.x() > window_size.x() - SCOLL_MOUSE_DISTANCE)
+      scroll_dir.x(1);
+    if (mouse_pos.y() < SCOLL_MOUSE_DISTANCE)
+      scroll_dir.y(-1);
+    else if (mouse_pos.y() > window_size.y() - SCOLL_MOUSE_DISTANCE)
+      scroll_dir.y(1);
+    pan(scroll_dir.scale(SCROLL_SPEED));
+
+    // mouse wheel = zoom
+    int wheel = Mouse.getDWheel();
+    if (wheel != 0)
+      zoom(wheel * ZOOM_SPEED, mouse_pos);
+    
+    // keep on keeping on :)
+    return EUpdateResult.CONTINUE;
   }
 }

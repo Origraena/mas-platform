@@ -15,7 +15,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package wjd.gui;
+package wjd.gui.window;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
@@ -35,7 +35,7 @@ public class AWTWindow extends JFrame implements IWindow
 
   /* ATTRIBUTES */ 
   // JPanel
-  private AWTCanvas canvas;
+  private AWTPanel canvas;
 
   /* METHODS */
 
@@ -53,7 +53,7 @@ public class AWTWindow extends JFrame implements IWindow
    * drivers do not support hardware rendering...
    */
   @Override
-  public void create(String name, V2 size)
+  public void create(String name, V2 size, IScene scene)
   {
     // Set up AWT window
     setTitle(name);
@@ -62,7 +62,7 @@ public class AWTWindow extends JFrame implements IWindow
     setResizable(false);
     setLocationRelativeTo(null);    // move to center of screen
     // Content
-    canvas = new AWTCanvas();
+    canvas = new AWTPanel();
     setContentPane(canvas);
     // This should always be last
     setVisible(true);

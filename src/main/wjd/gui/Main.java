@@ -16,10 +16,13 @@
  */
 package wjd.gui;
 
+import wjd.gui.window.LWJGLWindow;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import wjd.gui.window.AgentScene;
+import wjd.math.V2;
 
 /**
  * Launches the Graphical User Interface for our Multi-agent simulation.
@@ -32,8 +35,7 @@ abstract class Main
   /// CLASS NAMESPACE CONSTANTS
   public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
   public static final String WIN_NAME = "Virtual Societies";
-  public static final int WIN_W = 960;
-  public static final int WIN_H = 640;
+  public static final V2 WIN_SIZE = new V2(960, 640);
 
   /// CLASS INITIALISATION
   static
@@ -60,8 +62,8 @@ abstract class Main
     try
     {
       // create the window
-      window = new WindowContent();
-      window.create(WIN_NAME, WIN_W, WIN_H); // throws exception
+      window = new LWJGLWindow();
+      window.create(WIN_NAME, WIN_SIZE, new AgentScene());
       window.run();
     }
     catch (Exception ex)
