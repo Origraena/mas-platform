@@ -132,6 +132,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void paintComponent(Graphics g)
   {
+    System.out.println("painting " + shapes.size() + " shapes");
     // Get the graphics object
     Graphics2D g2d = (Graphics2D)g;
     
@@ -148,28 +149,3 @@ public class AWTCanvas extends JPanel implements ICanvas
 
   }
 }
-
-
-/*
- * 
- *     /// METHODS
-
-    // creation
-    public AWTCanvas()
-    {
-    }
-
-    // update
-
-    public boolean update()
-    {
-      // check for interruptions
-      //if(Input.getInstance().isKeyPressed(Input.KeyCode.ESC))
-          //return false;
-      // redraw the entire screen
-      repaint();
-      // no interruptions occured
-      return true;
-    }
-
- */

@@ -25,6 +25,7 @@ import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
 import wjd.gui.control.EUpdateResult;
 import wjd.gui.control.IInput;
+import wjd.gui.control.LWJGLInput;
 import wjd.gui.view.Camera;
 import wjd.gui.view.GLCanvas;
 import wjd.math.V2;
@@ -70,24 +71,22 @@ public class LWJGLWindow implements IWindow
   @Override
   public void create(String name, V2 size, IScene scene) throws LWJGLException
   {
-    // Save parameters
+    // window
     this.size = size.floor();
-    this.scene = scene;
     // LWJGL - Display
     Display.setDisplayMode(new DisplayMode((int)size.x(), (int)size.y()));
     Display.setFullscreen(false);
     Display.setTitle(name);
     Display.create();
     Display.setResizable(true);
-    // Don't initialise GLCanvas until the display is ready
-    glCanvas = GLCanvas.getInstance();
+    // model
+    this.scene = scene;
+    // view
+    glCanvas = GLCanvas.getInstance(); // must be after Display initialisation!
     camera = new Camera(size, null); // null => no boundary
-    // LWJGL - Keyboard
-    Keyboard.create();
-    Keyboard.enableRepeatEvents(false);
-    // LWJGL - Mouse
-    Mouse.setGrabbed(false);
-    Mouse.create();
+    // control
+    input = LWJGLInput.getInstance();
+
     // OpenGL
     resizeGL();
   }

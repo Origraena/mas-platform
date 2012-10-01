@@ -16,6 +16,7 @@
  */
 package wjd.gui.control;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import wjd.math.V2;
@@ -29,6 +30,27 @@ public class LWJGLInput implements IInput
   /* ATTRIBUTES */
   private V2 key_direction = new V2(),
              mouse_position = new V2();
+  
+  /* SINGLETON */
+  
+  private static LWJGLInput instance = null;
+  
+  public static LWJGLInput getInstance() throws LWJGLException
+  {
+    if(instance == null)
+      instance = new LWJGLInput();
+    return instance;
+  }
+  
+  private LWJGLInput() throws LWJGLException
+  {
+    // LWJGL - Keyboard
+    Keyboard.create();
+    Keyboard.enableRepeatEvents(false);
+    // LWJGL - Mouse
+    Mouse.setGrabbed(false);
+    Mouse.create();
+  }
   
   /* IMPLEMENTATIONS -- IINPUT */
   
