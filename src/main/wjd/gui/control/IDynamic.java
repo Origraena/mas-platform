@@ -14,16 +14,27 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.gui;
+package wjd.gui.control;
 
-import wjd.gui.view.Camera;
-import wjd.gui.view.ICanvas;
+import wjd.gui.control.EUpdateResult;
 
 /** 
 * @author wdyce
-* @seen 01-Oct-2012
+* @since 01-Oct-2012
 */
-public interface IVisible 
-{
-  public void render(ICanvas canvas, Camera camera);
+public interface IDynamic 
+{  
+  /* METHODS */
+  
+  /**
+   * Update the object a variable amount based on the specified delta-time.
+   * 
+   * @param t_delta the number of milliseconds that have elapsed.
+   * @return a value indicating the result of the update, generally 
+   * <a href="EUpdateResult#CONTINUE">CONTINUE</a> if nothing out of the 
+   * ordinary has happened.
+   */
+  public EUpdateResult update(int t_delta);
+  
+  
 }

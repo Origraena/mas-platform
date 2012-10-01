@@ -16,9 +16,9 @@
  */
 package wjd.gui.window;
 
-import wjd.gui.IDynamic;
-import wjd.gui.IInteractive;
-import wjd.gui.IVisible;
+import wjd.gui.control.IDynamic;
+import wjd.gui.control.IInteractive;
+import wjd.gui.view.IVisible;
 import wjd.math.V2;
 
 /**

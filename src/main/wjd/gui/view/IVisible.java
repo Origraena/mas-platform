@@ -14,22 +14,16 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.gui;
+package wjd.gui.view;
 
-/**
- * A value of this type is returned when certain objects are updated.
- *
- * @author wdyce
- * @seen 01-Oct-2012
- */
-public enum EUpdateResult
+import wjd.gui.view.Camera;
+import wjd.gui.view.ICanvas;
+
+/** 
+* @author wdyce
+* @since 01-Oct-2012
+*/
+public interface IVisible 
 {
-  /**
-   * The default result of an update: continue as before.
-   */
-  CONTINUE,
-  /**
-   * The object calling the update should stop doing so.
-   */
-  STOP
-};
+  public void render(ICanvas canvas, Camera camera);
+}

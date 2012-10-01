@@ -16,10 +16,9 @@
  */
 package wjd.gui.view;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import wjd.gui.EUpdateResult;
-import wjd.gui.IInteractive;
+import wjd.gui.control.EUpdateResult;
+import wjd.gui.control.IInput;
+import wjd.gui.control.IInteractive;
 import wjd.math.Rect;
 import wjd.math.V2;
 
@@ -223,31 +222,31 @@ public class Camera implements IInteractive
   /* IMPLEMENTATIONS */
   
   @Override
-  public EUpdateResult processKeyboard()
+  public EUpdateResult processInput(IInput input, V2 window_size)
   {
-    // get arrow-key input
-    V2 key_dir = new V2(0, 0);
-    if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
-      key_dir.yadd(1);
-    if (Keyboard.isKeyDown(Keyboard.KEY_UP))
-      key_dir.yadd(-1);
-    if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-      key_dir.xadd(1);
-    if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-      key_dir.xadd(-1);
+    EUpdateResult result = processKeyboard(input);
+    if(result != EUpdateResult.CONTINUE)
+      return result;
+    else
+      return processMouse(input, window_size);
     
+  }
+  
+  /* SUBROUTINES */
+  
+  private EUpdateResult processKeyboard(IInput input)
+  {
     // move the camera
-    pan(key_dir.scale(SCROLL_SPEED));
+    pan(input.getKeyDirection().scale(SCROLL_SPEED));
     
     // keep on keeping on :)
     return EUpdateResult.CONTINUE;
   }
-
-  @Override
-  public EUpdateResult processMouse(V2 window_size)
+  
+  private EUpdateResult processMouse(IInput input, V2 window_size)
   {
     // mouse position
-    V2 mouse_pos = new V2(Mouse.getX(), window_size.y() - Mouse.getY());
+    V2 mouse_pos = input.getMousePosition(window_size); 
 
     // mouse near edges = pan
     V2 scroll_dir = new V2();
@@ -262,11 +261,12 @@ public class Camera implements IInteractive
     pan(scroll_dir.scale(SCROLL_SPEED));
 
     // mouse wheel = zoom
-    int wheel = Mouse.getDWheel();
+    int wheel = input.getMouseWheelDelta();
     if (wheel != 0)
       zoom(wheel * ZOOM_SPEED, mouse_pos);
     
     // keep on keeping on :)
     return EUpdateResult.CONTINUE;
   }
+  
 }

@@ -14,8 +14,9 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.gui.window;
+package wjd.gui.model;
 
+import wjd.gui.control.EUpdateResult;
 import ori.mas.actors.EatActor;
 import ori.mas.actors.MovementActor;
 import ori.mas.core.AdaptedScene;
@@ -32,9 +33,10 @@ import ori.ogapi.geometry.Circle;
 import ori.ogapi.geometry.LinkedListSurface;
 import ori.ogapi.geometry.Point;
 import ori.ogapi.util.Iterator;
-import wjd.gui.EUpdateResult;
+import wjd.gui.control.IInput;
 import wjd.gui.view.Camera;
 import wjd.gui.view.ICanvas;
+import wjd.gui.window.IWindow;
 import wjd.math.V2;
 
 /**
@@ -127,16 +129,7 @@ public class AgentScene implements IWindow.IScene
   }
 
   @Override
-  public EUpdateResult processKeyboard()
-  {
-    // TODO
-    
-    // all clear !
-    return EUpdateResult.CONTINUE;
-  }
-
-  @Override
-  public EUpdateResult processMouse(V2 window_size)
+  public EUpdateResult processInput(IInput input, V2 window_size)
   {
     // TODO
     

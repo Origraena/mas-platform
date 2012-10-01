@@ -21,7 +21,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import wjd.gui.window.AWTWindow;
-import wjd.gui.window.AgentScene;
+import wjd.gui.model.AgentScene;
 import wjd.gui.window.IWindow;
 import wjd.gui.window.LWJGLWindow;
 import wjd.math.V2;

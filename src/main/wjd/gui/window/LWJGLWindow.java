@@ -23,7 +23,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
-import wjd.gui.EUpdateResult;
+import wjd.gui.control.EUpdateResult;
+import wjd.gui.control.IInput;
 import wjd.gui.view.Camera;
 import wjd.gui.view.GLCanvas;
 import wjd.math.V2;
@@ -43,11 +44,13 @@ public class LWJGLWindow implements IWindow
   private V2 size;
   // timing
   private long t_previous = -1; // -1 => uninitialised
+  // model
+  private IScene scene;
   // view
   private GLCanvas glCanvas;
   private Camera camera;
-  // model
-  private IScene scene;
+  // control
+  private IInput input;
 
   /* METHODS */
   
@@ -102,12 +105,9 @@ public class LWJGLWindow implements IWindow
       // don't update if display is not in focus
       if (Display.isVisible())
       {
-        // deal with input - camera
-        camera.processKeyboard();
-        camera.processMouse(size);
-        // deal with input - scene
-        scene.processKeyboard();
-        scene.processMouse(size);
+        // deal with input
+        camera.processInput(input, size);
+        scene.processInput(input, size);
         processWindow();
         // update and redraw
         if(scene.update(timeDelta()) == EUpdateResult.STOP)

@@ -21,6 +21,8 @@ import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import org.lwjgl.LWJGLException;
+import wjd.gui.control.AWTInput;
+import wjd.gui.control.IInput;
 import wjd.gui.view.AWTCanvas;
 import wjd.gui.view.Camera;
 import wjd.math.V2;
@@ -39,18 +41,20 @@ public class AWTWindow extends JFrame implements IWindow
   /* ATTRIBUTES */
   // window
   private V2 size;
+  // model
+  private IScene scene;
   // view
   private AWTCanvas canvas;
   private Camera camera;
-  // model
-  private IScene scene;
+  // control
+  private IInput input;
 
   /* METHODS */
 
   // life-cycle
   
   /**
-   * Create the AWT JFrame Window of the given size, with a corresponding JPanel 
+   * Create the AWT JFrame IWindow of the given size, with a corresponding JPanel 
    * canvas.
    *
    * @param name the String of characters to be displayed at the top of the
@@ -63,19 +67,22 @@ public class AWTWindow extends JFrame implements IWindow
   @Override
   public void create(String name, V2 size, IScene scene) throws LWJGLException
   {
-    // Save parameters
+    // window
     this.size = size;
-    this.scene = scene;
     // Set up AWT window
     setTitle(name);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setSize((int)size.x(), (int)size.y());
     setResizable(false);
     setLocationRelativeTo(null);    // move to center of screen
+    // model 
+    this.scene = scene;
     // view
     canvas = new AWTCanvas();
     camera = new Camera(size, null); // null => no boundary
     setContentPane(canvas);
+    // control
+    input = AWTInput.getInstance();
     // This should always be last
     setVisible(true);
   }
@@ -90,12 +97,10 @@ public class AWTWindow extends JFrame implements IWindow
     boolean running = true;
     while(running)
     {
-      // deal with input - camera
-      camera.processKeyboard();
-      camera.processMouse(size);
-      // deal with input - scene
-      scene.processKeyboard();
-      scene.processMouse(size);
+      // deal with input
+      camera.processInput(input, size);
+      scene.processInput(input, size);
+      
 
       // Catch exceptions
       try

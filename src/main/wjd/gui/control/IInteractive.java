@@ -14,25 +14,27 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.gui;
+package wjd.gui.control;
 
-/** 
-* @author wdyce
-* @seen 01-Oct-2012
-*/
-public interface IDynamic 
-{  
-  /* METHODS */
-  
+import wjd.math.V2;
+
+/**
+ * @author wdyce
+ * @since 01-Oct-2012
+ */
+public interface IInteractive
+{
   /**
-   * Update the object a variable amount based on the specified delta-time.
-   * 
-   * @param t_delta the number of milliseconds that have elapsed.
-   * @return a value indicating the result of the update, generally 
-   * <a href="EUpdateResult#CONTINUE">CONTINUE</a> if nothing out of the 
-   * ordinary has happened.
+   * Update based on the state of the input (normally just the keyboard and
+   * mouse).
+   *
+   * @param input the input state object, containing the key- and mouse-button 
+   * states.
+   * @param window_size this is required if we're take make any sense of the
+   * mouse position data.
+   * @return a value indicating the result of the update, generally <a
+   * href="EUpdateResult#CONTINUE">CONTINUE</a> if nothing out of the ordinary
+   * has happened.
    */
-  public EUpdateResult update(int t_delta);
-  
-  
+  public EUpdateResult processInput(IInput input, V2 window_size);
 }
