@@ -42,7 +42,7 @@ import wjd.math.V2;
  * Window manager of the Graphical User Interface of our Multi-agent simulation.
  *
  * @author wdyce
- * @date Sep 27, 2012
+ * @since Sep 27, 2012
  */
 public class GUIWindow extends LWJGLWindow
 {

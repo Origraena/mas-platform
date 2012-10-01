@@ -25,7 +25,7 @@ import wjd.math.V2;
  * relative to the view, as in Google Maps.
  *
  * @author wdyce
- * @date 05-Mar-2012
+ * @since 05-Mar-2012
  */
 public class Camera
 {

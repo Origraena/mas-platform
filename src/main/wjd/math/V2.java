@@ -22,7 +22,7 @@ package wjd.math;
  * methods implemented.
  *
  * @author wdyce
- * @date 24 Aug, 2012
+ * @since 24 Aug, 2012
  */
 public class V2
 {

@@ -25,12 +25,12 @@ import java.util.logging.Logger;
  * Launches the Graphical User Interface for our Multi-agent simulation.
  *
  * @author wdyce
- * @date Sep 27, 2012
+ * @since Sep 27, 2012
  */
-abstract class GUIMain
+abstract class Main
 {
   /// CLASS NAMESPACE CONSTANTS
-  public static final Logger LOGGER = Logger.getLogger(GUIMain.class.getName());
+  public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
   public static final String WIN_NAME = "Virtual Societies";
   public static final int WIN_W = 960;
   public static final int WIN_H = 640;

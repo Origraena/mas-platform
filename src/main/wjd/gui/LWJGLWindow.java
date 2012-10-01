@@ -30,15 +30,12 @@ import wjd.gui.view.GLPaintbrush;
  * Window and OpenGL canvas we can use to draw on.
  *
  * @author wdyce
- * @date 16-Feb-2012
+ * @since 16-Feb-2012
  * @see <a href="http://lwjgl.org/">LWJGL Home Page</a>
  */
-public abstract class LWJGLWindow
+public abstract class LWJGLWindow extends Window
 {
   /* ATTRIBUTES */
-  // window
-  private int width, height;
-  private final String name;
   // timing
   private long t_previous = -1; // uninitialised
 
@@ -57,9 +54,7 @@ public abstract class LWJGLWindow
    */
   public LWJGLWindow(String name, int width, int height)
   {
-    this.name = name;
-    this.width = width;
-    this.height = height;
+    super(name, width, height);
   }
 
   /**
@@ -71,18 +66,18 @@ public abstract class LWJGLWindow
    */
   public void create() throws LWJGLException
   {
-    //Display
-    Display.setDisplayMode(new DisplayMode(width, height));
+    // Display
+    Display.setDisplayMode(new DisplayMode(getHeight(), getWidth()));
     Display.setFullscreen(false);
-    Display.setTitle(name);
+    Display.setTitle(getName());
     Display.create();
     Display.setResizable(true);
 
-    //Keyboard
+    // Keyboard
     Keyboard.create();
     Keyboard.enableRepeatEvents(false);
 
-    //Mouse
+    // Mouse
     Mouse.setGrabbed(false);
     Mouse.create();
 
@@ -106,6 +101,7 @@ public abstract class LWJGLWindow
   /**
    * Launch the application and run until some event interrupts its execution.
    */
+  @Override
   public void run()
   {
     while (!Display.isCloseRequested()
@@ -140,28 +136,6 @@ public abstract class LWJGLWindow
       Display.sync(60);   // 60 frames per second
     }
   }
-
-  // query
-  /**
-   * Return the width of the Window.
-   *
-   * @return the width of the Window in pixels.
-   */
-  public int getWidth()
-  {
-    return width;
-  }
-
-  /**
-   * Return the height of the Window.
-   *
-   * @return the height of the Window in pixels.
-   */
-  public int getHeight()
-  {
-    return height;
-  }
-
 
   /* SUBROUTINES */
   // update and input

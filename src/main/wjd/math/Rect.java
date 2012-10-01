@@ -22,7 +22,7 @@ package wjd.math;
  * box-shaped objects (this Rectangle does not rotate though).
  *
  * @author wdyce
- * @date 24 Aug, 2012
+ * @since 24 Aug, 2012
  */
 public class Rect
 {

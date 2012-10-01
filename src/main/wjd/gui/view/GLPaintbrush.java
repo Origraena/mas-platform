@@ -28,7 +28,7 @@ import wjd.math.V2;
  * so-on) using OpenGL.
  *
  * @author wdyce
- * @date 16-Feb-2012
+ * @since 16-Feb-2012
  */
 public class GLPaintbrush implements IPaintbrush
 {
