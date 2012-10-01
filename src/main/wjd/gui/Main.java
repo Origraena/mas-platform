@@ -38,7 +38,7 @@ abstract class Main
   /// CLASS NAMESPACE CONSTANTS
   public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
   public static final String WIN_NAME = "Virtual Societies";
-  public static final V2 WIN_SIZE = new V2(960, 640);
+  public static final V2 WIN_SIZE = new V2(640, 480);
 
   /// CLASS INITIALISATION
   static
@@ -68,7 +68,7 @@ abstract class Main
     try
     {
       // by default try to create a window using LWJGL's native OpenGL
-      window = new LWJGLWindow();
+      window = new AWTWindow();//LWJGLWindow();
       window.create(WIN_NAME, WIN_SIZE, scene);
       window.run();
     }

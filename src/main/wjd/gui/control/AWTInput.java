@@ -89,7 +89,7 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   @Override
   public int getMouseWheelDelta()
   {
-    System.out.println("AWT has no support for mouse wheel yet -- TODO!");
+    // TODO !
     return 0;
   }
   

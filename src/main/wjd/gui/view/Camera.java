@@ -60,7 +60,7 @@ public class Camera implements IInteractive
     this.canvas_size = canvas_size;
     this.boundary = boundary;
     view = new Rect(V2.ORIGIN, canvas_size);
-    zoom = 1.0f;
+    zoom = ZOOM_MIN;//1.0f;
   }
 
   /**
@@ -69,7 +69,7 @@ public class Camera implements IInteractive
   public void reset()
   {
     view.reset(V2.ORIGIN, canvas_size);
-    zoom = 1.0f;
+    zoom = ZOOM_MIN;//1.0f;
   }
 
   // query

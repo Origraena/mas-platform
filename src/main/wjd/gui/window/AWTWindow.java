@@ -101,6 +101,9 @@ public class AWTWindow extends JFrame implements IWindow
       camera.processInput(input, size);
       scene.processInput(input, size);
       
+      // queue rendering
+      scene.render(canvas, camera);
+      repaint();
 
       // Catch exceptions
       try

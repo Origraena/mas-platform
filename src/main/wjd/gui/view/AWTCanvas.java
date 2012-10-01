@@ -17,6 +17,7 @@
 
 package wjd.gui.view;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -78,7 +79,8 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void clear()
   {
-    // empty the list of shapes after drawing, not when clear is called !
+    // empty the list of shapes
+    shapes.clear();
   }
   
   /**
@@ -91,7 +93,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void circle(V2 centre, float radius)
   {
-    shapes.add(new Ellipse2D.Float(centre.x(), centre.y(), radius*2, radius*2));
+    shapes.add(new Ellipse2D.Float(100, 100, radius*2, radius*2));
   }
 
   /**
@@ -137,15 +139,13 @@ public class AWTCanvas extends JPanel implements ICanvas
     Graphics2D g2d = (Graphics2D)g;
     
     // Clear the screen
+    g2d.setColor(Color.PINK);
     g2d.fillRect(0, 0, getWidth(), getHeight());
     
     // Draw each shape
+    g2d.setColor(Color.BLUE);
     Shape s;
     while((s = shapes.poll()) != null)
       g2d.draw(s);
-    
-    // empty the list of shapes
-    shapes.clear();
-
   }
 }
