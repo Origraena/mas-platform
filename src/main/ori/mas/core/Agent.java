@@ -59,13 +59,13 @@ public class Agent implements Reportable {
 		_body.setAgent(this);
 	}
 
-	public Influence tick(World w, float t_delta) {
+	public Influence tick(World w) {
 		//System.out.println("sense");
 		this.sense(w);
 		//System.out.println("think");
-		this.think(t_delta);
+		this.think();
 		//System.out.println("act");
-		return this.act(t_delta);
+		return this.act();
 	}
 
 	public void sense(World w) {
@@ -73,14 +73,14 @@ public class Agent implements Reportable {
 			_mind.percept(_body.sense(w));
 	}
 
-	public void think(float t_delta) {
+	public void think() {
 		if ((this.hasMind()) && (this.hasBody()))
 			_body.prepareActor(_mind.nextActor());
 	}
 
-	public Influence act(float t_delta) {
+	public Influence act() {
 		if (this.hasBody())
-			return _body.act(t_delta);
+			return _body.act();
 		return null;
 	}
 

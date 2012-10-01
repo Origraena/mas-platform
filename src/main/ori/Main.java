@@ -75,7 +75,7 @@ public class Main {
 		final int nbTicks = 100;
 		for (int tick = 0 ; tick < nbTicks ; tick++)  {
 			//System.out.println("tick = "+tick);
-			w.tick(1000/60);
+			w.tick();
 			p1.println(""+b1.center().x+" "+b1.center().y);
 			p2.println(""+b2.center().x+" "+b2.center().y);
 ////		for (int y = -20 ; y < 20 ; y++) {

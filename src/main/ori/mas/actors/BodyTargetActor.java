@@ -29,7 +29,7 @@ public abstract class BodyTargetActor extends AbstractActor {
 		return _target;
 	}
 
-	@Override public abstract Influence act(float t_delta);
+	@Override public abstract Influence act();
 
 	private Body _target;
 

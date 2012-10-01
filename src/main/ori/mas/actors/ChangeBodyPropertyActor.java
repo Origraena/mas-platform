@@ -40,7 +40,7 @@ public class ChangeBodyPropertyActor extends BodyTargetActor {
 	}
 
 	@Override
-	public ChangeBodyPropertyInfluence act(float t_delta) {
+	public ChangeBodyPropertyInfluence act() {
 		return new ChangeBodyPropertyInfluence(this,
 		                                       this.target(),
 		                                       this.property(),

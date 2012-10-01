@@ -114,7 +114,7 @@ public class GUIWindow extends LWJGLWindow
   @Override
   protected void update(int t_delta)
   {
-    world.tick(t_delta/1000.f);
+    world.tick();
   }
 
   @Override
