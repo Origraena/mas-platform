@@ -16,12 +16,14 @@
  */
 package wjd.gui;
 
-import wjd.gui.window.LWJGLWindow;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import wjd.gui.window.AWTWindow;
 import wjd.gui.window.AgentScene;
+import wjd.gui.window.IWindow;
+import wjd.gui.window.LWJGLWindow;
 import wjd.math.V2;
 
 /**
@@ -58,11 +60,11 @@ abstract class Main
      * must be run with the following argument: 
      * -Djava.library.path=/a/path/to/lwjgl-2.8.4/native/your_operating_system
      */
-    LWJGLWindow window = null;
+    IWindow window = null;
     try
     {
       // create the window
-      window = new LWJGLWindow();
+      window = new AWTWindow(); //new LWJGLWindow();
       window.create(WIN_NAME, WIN_SIZE, new AgentScene());
       window.run();
     }

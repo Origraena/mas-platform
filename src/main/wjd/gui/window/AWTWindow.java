@@ -20,6 +20,9 @@ package wjd.gui.window;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
+import org.lwjgl.LWJGLException;
+import wjd.gui.view.AWTCanvas;
+import wjd.gui.view.Camera;
 import wjd.math.V2;
 
 /** 
@@ -33,9 +36,14 @@ public class AWTWindow extends JFrame implements IWindow
 {
   /* CONSTANTS */
 
-  /* ATTRIBUTES */ 
-  // JPanel
-  private AWTPanel canvas;
+  /* ATTRIBUTES */
+  // window
+  private V2 size;
+  // view
+  private AWTCanvas canvas;
+  private Camera camera;
+  // model
+  private IScene scene;
 
   /* METHODS */
 
@@ -53,16 +61,20 @@ public class AWTWindow extends JFrame implements IWindow
    * drivers do not support hardware rendering...
    */
   @Override
-  public void create(String name, V2 size, IScene scene)
+  public void create(String name, V2 size, IScene scene) throws LWJGLException
   {
+    // Save parameters
+    this.size = size;
+    this.scene = scene;
     // Set up AWT window
     setTitle(name);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setSize((int)size.x(), (int)size.y());
     setResizable(false);
     setLocationRelativeTo(null);    // move to center of screen
-    // Content
-    canvas = new AWTPanel();
+    // view
+    canvas = new AWTCanvas();
+    camera = new Camera(size, null); // null => no boundary
     setContentPane(canvas);
     // This should always be last
     setVisible(true);
@@ -78,8 +90,12 @@ public class AWTWindow extends JFrame implements IWindow
     boolean running = true;
     while(running)
     {
-      // Do update
-      running = canvas.update();
+      // deal with input - camera
+      camera.processKeyboard();
+      camera.processMouse(size);
+      // deal with input - scene
+      scene.processKeyboard();
+      scene.processMouse(size);
 
       // Catch exceptions
       try

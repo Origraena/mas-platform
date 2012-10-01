@@ -41,12 +41,13 @@ public class LWJGLWindow implements IWindow
   /* ATTRIBUTES */
   // window
   private V2 size;
-  private IScene scene;
-  // drawing
+  // timing
+  private long t_previous = -1; // -1 => uninitialised
+  // view
   private GLCanvas glCanvas;
   private Camera camera;
-  // timing
-  private long t_previous = -1; // uninitialised
+  // model
+  private IScene scene;
 
   /* METHODS */
   
