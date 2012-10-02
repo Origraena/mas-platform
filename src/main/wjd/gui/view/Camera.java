@@ -38,6 +38,8 @@ public class Camera implements IInteractive
   private static final float ZOOM_SPEED = 0.001f;
   private static final float ZOOM_MIN = 0.1f;
   private static final float ZOOM_MAX = 2.0f;
+  private static final float ZOOM_DEFAULT = 1.0f;
+  
   /* ATTRIBUTES */
   private V2 canvas_size;
   private Rect view, boundary;
@@ -60,7 +62,7 @@ public class Camera implements IInteractive
     this.canvas_size = canvas_size;
     this.boundary = boundary;
     view = new Rect(V2.ORIGIN, canvas_size);
-    zoom = 1.0f;
+    zoom = ZOOM_DEFAULT;
   }
 
   /**
@@ -69,7 +71,7 @@ public class Camera implements IInteractive
   public void reset()
   {
     view.reset(V2.ORIGIN, canvas_size);
-    zoom = 1.0f;
+    zoom = ZOOM_DEFAULT;
   }
 
   // query

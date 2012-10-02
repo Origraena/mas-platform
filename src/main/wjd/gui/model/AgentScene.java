@@ -108,9 +108,9 @@ public class AgentScene implements IWindow.IScene
     V2 spawn_pos = new V2();
     for(int i = 0; i < 50; i++)
     {
-      spawn_pos.xy((float)Math.random()*2000, (float)Math.random()*2000);
+      spawn_pos.xy((float)Math.random()*2000-1000, (float)Math.random()*2000-1000);
       world.add(newPredator(spawn_pos));
-      spawn_pos.xy((float)Math.random()*2000, (float)Math.random()*2000);
+      spawn_pos.xy((float)Math.random()*2000-1000, (float)Math.random()*2000-1000);
       world.add(newPrey(spawn_pos));
     }
   }
@@ -134,6 +134,7 @@ public class AgentScene implements IWindow.IScene
     
     // draw agents
     Iterator itr = world.iterator();
+    int i =0;
     while (itr.hasNext())
     {
       Point pos = ((Agent) itr.next()).body().center();
