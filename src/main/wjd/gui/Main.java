@@ -68,7 +68,7 @@ abstract class Main
     try
     {
       // by default try to create a window using LWJGL's native OpenGL
-      window = new AWTWindow();//LWJGLWindow();
+      window = new LWJGLWindow();
       window.create(WIN_NAME, WIN_SIZE, scene);
       window.run();
     }

@@ -47,9 +47,45 @@ import wjd.math.V2;
  */
 public class AgentScene implements IWindow.IScene
 {
-  /// TODO -- remove this
+  /* CONSTANTS */
   private static final V2 HELLO_POS = new V2(100, 100);
   private static final String HELLO_TEXT = "Hello Agents!";
+  
+  /* FUNCTIONS */
+  private static Agent newPredator(V2 position)
+  {
+    // build the predate-agent's body
+    Body body = new Body();
+    body.set(Properties.HEALTH, new Integer(1000));
+    body.set(Properties.HEALTH_MIN, new Integer(0));
+    body.set(Properties.HEALTH_MAX, new Integer(1000));
+    body.set(Properties.FEED, new Integer(100));
+    body.set(Properties.FEED_MIN, new Integer(0));
+    body.set(Properties.FEED_MAX, new Integer(100));
+    body.translate(new Point(position.x(), position.y()));
+    body.addActor(new MovementActor(body, 8));
+    body.addActor(new EatActor(body, 10));
+    body.addSensor(new ShapeSensor(body, new Circle(0, 0, 100)));
+    // attach a simple mind and add to the world
+    return new Agent(new StateMachineMind(new PredateState()), body);
+  }
+  
+  private static Agent newPrey(V2 position)
+  {
+    // build the patrol-agent's body
+    Body body = new Body();
+    body.set(Properties.HEALTH, new Integer(1000));
+    body.set(Properties.HEALTH_MIN, new Integer(0));
+    body.set(Properties.HEALTH_MAX, new Integer(1000));
+    body.set(Properties.FEED, new Integer(100));
+    body.set(Properties.FEED_MIN, new Integer(0));
+    body.set(Properties.FEED_MAX, new Integer(100));
+    body.translate(new Point(position.x(), position.y()));
+    body.addActor(new MovementActor(body, 4));
+    body.addSensor(new ShapeSensor(body, new Circle(0, 0, 150)));
+    // attach a simple mind and add to the world
+    return new Agent(new StateMachineMind(new PatrolState()), body);
+  }
   
   /* ATTRIBUTES */
   private World world;
@@ -68,34 +104,15 @@ public class AgentScene implements IWindow.IScene
     world = new World(new DefaultHeart(),
       new AdaptedScene(new LinkedListSurface<Body>()));
 
-    // build the patrol-agent's body
-    Body body = new Body();
-    body.set(Properties.HEALTH, new Integer(1000));
-    body.set(Properties.HEALTH_MIN, new Integer(0));
-    body.set(Properties.HEALTH_MAX, new Integer(1000));
-    body.set(Properties.FEED, new Integer(100));
-    body.set(Properties.FEED_MIN, new Integer(0));
-    body.set(Properties.FEED_MAX, new Integer(100));
-    body.translate(new Point(600, 800));
-    body.addActor(new MovementActor(body, 4));
-    body.addSensor(new ShapeSensor(body, new Circle(0, 0, 150)));
-    // attach a simple mind and add to the world
-    world.add(new Agent(new StateMachineMind(new PatrolState()), body));
-
-    // build the predate-agent's body
-    body = new Body();
-    body.set(Properties.HEALTH, new Integer(1000));
-    body.set(Properties.HEALTH_MIN, new Integer(0));
-    body.set(Properties.HEALTH_MAX, new Integer(1000));
-    body.set(Properties.FEED, new Integer(100));
-    body.set(Properties.FEED_MIN, new Integer(0));
-    body.set(Properties.FEED_MAX, new Integer(100));
-    body.translate(new Point(4000, 2500));
-    body.addActor(new MovementActor(body, 8));
-    body.addActor(new EatActor(body, 10));
-    body.addSensor(new ShapeSensor(body, new Circle(0, 0, 100)));
-    // attach a simple mind and add to the world
-    world.add(new Agent(new StateMachineMind(new PredateState()), body));
+    // create agents
+    V2 spawn_pos = new V2();
+    for(int i = 0; i < 50; i++)
+    {
+      spawn_pos.xy((float)Math.random()*2000, (float)Math.random()*2000);
+      world.add(newPredator(spawn_pos));
+      spawn_pos.xy((float)Math.random()*2000, (float)Math.random()*2000);
+      world.add(newPrey(spawn_pos));
+    }
   }
 
   // overrides
