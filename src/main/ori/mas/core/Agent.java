@@ -109,6 +109,15 @@ public class Agent implements Reportable {
 		return new Agent(m,b);
 	}
 
+//	public void tell(Message m) {
+//		_tong.tell(m);
+//	}
+// TODO
+//	public void shout(Message m) {
+//		_body.shout(m);
+//		body.tong().shout
+//	}
+
 	private Body _body;
 	private Mind _mind;
 

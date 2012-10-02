@@ -20,6 +20,8 @@ public class Properties {
 	public static final String FEED_MIN   = FEED+SUFFIX_MIN;
 	public static final String FEED_MAX   = FEED+SUFFIX_MAX;
 
+	public static final String FEED_TICK  = "feed-tick"; // -1
+
 	// Body
 	public static final String TARGET     = "target";
 

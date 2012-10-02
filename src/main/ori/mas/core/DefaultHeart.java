@@ -243,7 +243,7 @@ public class DefaultHeart implements Heart {
 		}
 		return null;
 	}
-	
+
 	protected void callbackChangeBodyProperty(ChangeBodyPropertyInfluence i) {
 		//System.out.println("callbackChangeBodyProperty()");
 		//System.out.println("\ti.target = "+i.target());
