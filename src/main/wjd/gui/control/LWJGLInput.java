@@ -70,6 +70,9 @@ public class LWJGLInput implements IInput
   @Override
   public V2 getKeyDirection()
   {
+    // Reset key direction vector
+    key_direction.xy(0, 0);
+    
     // Update keyboard direction vector
     if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
       key_direction.yadd(1);
@@ -79,6 +82,7 @@ public class LWJGLInput implements IInput
       key_direction.xadd(1);
     if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
       key_direction.xadd(-1);
+    
     // Return the vector
     return key_direction;
   }

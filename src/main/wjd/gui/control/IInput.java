@@ -29,7 +29,8 @@ public interface IInput
   /* NESTING */
   public static enum EKeyCode
   {
-    L_SHIFT, L_CTRL, L_ALT, SPACE, R_ALT, R_CTRL, R_SHIFT, ENTER, ESC, BACKSPACE
+    UP, RIGHT, DOWN, LEFT, L_SHIFT, L_CTRL, L_ALT, SPACE, R_ALT, R_CTRL,
+    R_SHIFT, ENTER, ESC, BACKSPACE
   }
   public static enum EMouseButton
   {

@@ -104,13 +104,14 @@ public class LWJGLWindow implements IWindow
       // don't update if display is not in focus
       if (Display.isVisible())
       {
-        // deal with input
-        camera.processInput(input, size);
-        scene.processInput(input, size);
-        processWindow();
-        // update and redraw
-        if(scene.update(timeDelta()) == EUpdateResult.STOP)
+        // update
+        if(camera.processInput(input, size)  == EUpdateResult.STOP
+        || scene.processInput(input, size)  == EUpdateResult.STOP
+        || scene.update(1000/60) == EUpdateResult.STOP)
           running = false;
+        // check for window events
+        processWindow();
+        // render
         scene.render(glCanvas, camera);
       }
       else
@@ -131,7 +132,7 @@ public class LWJGLWindow implements IWindow
       Display.sync(MAX_FPS);
       
       // check whether we should stop running
-      if(Display.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
+      if(Display.isCloseRequested())
         running = false;
     }
   }

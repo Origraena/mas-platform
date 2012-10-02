@@ -17,7 +17,9 @@
 
 package wjd.gui.view;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -37,8 +39,37 @@ import wjd.math.V2;
  */
 public class AWTCanvas extends JPanel implements ICanvas
 {
+  /* UTILITY */
+  private static Color ColourToAWTColor(Colour c)
+  {
+    return new Color(c.r, c.b, c.g, c.a);
+  }
+  
+  /* POSSIBLE DRAW COMMANDS TO BE QUEUED */
+  private static class DrawText
+  {
+    public String text;
+    public V2 pos;
+    public DrawText(String text, V2 pos) { this.text = text; this.pos = pos; }
+  }
+  private static class ColourChange
+  {
+    public Colour colour;
+    public ColourChange(Colour colour) { this.colour = colour; }
+  }
+  private static class LineWidthChange
+  {
+    public float lineWidth;
+    public LineWidthChange(float lineWidth) { this.lineWidth = lineWidth; }
+  }
+  private static class FontChange
+  {
+    public Object font;
+    public FontChange(Object font) { this.font = font; }
+  }
+  
   /* ATTRIBUTES */
-  private Queue<Shape> shapes;
+  private Queue<Object> draw_queue;
 
   /* METHODS */
   // creation
@@ -47,29 +78,29 @@ public class AWTCanvas extends JPanel implements ICanvas
    */
   public AWTCanvas()
   {
-    shapes = new LinkedList<Shape>();
+    draw_queue = new LinkedList<Object>();
   }
 
   // setup functions
   @Override
   public ICanvas setColour(Colour colour)
   {
-    // TODO
+    draw_queue.add(new ColourChange(colour));
     return this;
   }
 
   @Override
   public ICanvas setLineWidth(float lineWidth)
   {
-    // TODO
+    draw_queue.add(new LineWidthChange(lineWidth));
     return this;
   }
 
   @Override
   public ICanvas setFont(Object new_font)
   {
-    // TODO
-     return this;
+    draw_queue.add(new FontChange(new_font));
+    return this;
   }
 
   // drawing functions
@@ -79,8 +110,8 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void clear()
   {
-    // empty the list of shapes
-    shapes.clear();
+    // empty the list of draw_queue
+    draw_queue.clear();
   }
   
   /**
@@ -93,7 +124,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void circle(V2 centre, float radius)
   {
-    shapes.add(new Ellipse2D.Float(centre.x(), centre.y(), radius*2, radius*2));
+    draw_queue.add(new Ellipse2D.Float(centre.x(), centre.y(), radius*2, radius*2));
   }
 
   /**
@@ -105,7 +136,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void line(V2 start, V2 end)
   {
-    shapes.add(new Line2D.Float(start.x(), start.y(), end.x(), end.y()));
+    draw_queue.add(new Line2D.Float(start.x(), start.y(), end.x(), end.y()));
   }
 
   /**
@@ -116,7 +147,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void box(Rect rect)
   {
-    shapes.add(new Rectangle2D.Float(rect.x(), rect.y(), rect.w(), rect.h()));
+    draw_queue.add(new Rectangle2D.Float(rect.x(), rect.y(), rect.w(), rect.h()));
   }
 
   /**
@@ -128,7 +159,7 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void text(String string, V2 position)
   {
-    //g2d.drawString(string, position.x(), position.y());
+    draw_queue.add(new DrawText(string, position));
   }
   
   @Override
@@ -137,14 +168,42 @@ public class AWTCanvas extends JPanel implements ICanvas
     // Get the graphics object
     Graphics2D g2d = (Graphics2D)g;
     
-    // Clear the screen
-    g2d.setColor(Color.PINK);
+    // Clear the screen in white
+    g2d.setColor(Color.WHITE);
     g2d.fillRect(0, 0, getWidth(), getHeight());
     
-    // Draw each shape
-    g2d.setColor(Color.BLUE);
-    Shape s;
-    while((s = shapes.poll()) != null)
-      g2d.draw(s);
+    // Draw each shape in black by default
+    g2d.setColor(Color.BLACK);
+    Object command;
+    while((command = draw_queue.poll()) != null)
+    {
+      // draw a shape
+      if(command instanceof Shape)
+        g2d.fill((Shape)command);
+      // draw text
+      else if(command instanceof DrawText)
+      {
+        DrawText text_cmd = (DrawText)command;
+        g2d.drawString(text_cmd.text, text_cmd.pos.x(), text_cmd.pos.y());
+      }
+      // change colour
+      else if(command instanceof ColourChange)
+        g2d.setColor(ColourToAWTColor(((ColourChange)command).colour));
+      // change line width
+      else if(command instanceof LineWidthChange)
+        g2d.setStroke(new BasicStroke(((LineWidthChange)command).lineWidth));
+      // change new_font
+      else if(command instanceof FontChange)
+      {
+        Object new_font = ((FontChange)command).font;
+        if(new_font instanceof Font)
+          g2d.setFont((Font)(new_font));
+        else
+          System.out.println("Incorrect font type " + new_font);
+      }
+      // unknown or unsupported command
+      else
+        System.out.println("Unrecognized command type " + command);
+    }
   }
 }

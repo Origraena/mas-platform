@@ -35,12 +35,12 @@ import wjd.math.V2;
  */
 abstract class Main
 {
-  /// CLASS NAMESPACE CONSTANTS
+  /* CLASS NAMESPACE CONSTANTS */
   public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
   public static final String WIN_NAME = "Virtual Societies";
   public static final V2 WIN_SIZE = new V2(640, 480);
 
-  /// CLASS INITIALISATION
+  /* CLASS INITIALISATION */
   static
   {
     try
@@ -55,7 +55,7 @@ abstract class Main
     }
   }
 
-  /// PROGRAM ENTRANCE POINT
+  /* PROGRAM ENTRANCE POINT */
   public static void main(String[] args)
   {
     /* NB - LWJGL uses native libraries, so this program will crash at run-time
@@ -68,20 +68,23 @@ abstract class Main
     try
     {
       // by default try to create a window using LWJGL's native OpenGL
-      window = new AWTWindow();//LWJGLWindow();
+      window = new LWJGLWindow();
       window.create(WIN_NAME, WIN_SIZE, scene);
       window.run();
+      
     }
     catch(LWJGLException lwjglex)
     {
       try
       {
-        // default to AWT if there's a problem with LWJGL
+        // LWJGL failed, destroy it !
         LOGGER.log(Level.WARNING, lwjglex.toString(), lwjglex);
         LOGGER.log(Level.WARNING, "Defaulting to AWT Window");
         window.destroy();
+        // default to AWT if there's a problem with LWJGL
         window = new AWTWindow();
         window.create(WIN_NAME, WIN_SIZE, scene);
+        window.run();
       }
       catch (Exception ex)
       {
@@ -101,4 +104,6 @@ abstract class Main
         window.destroy(); 
     }
   }
+  
+  /* CLASS SUBROUTINES */
 }
