@@ -1,17 +1,15 @@
 package ori;
 
-import ori.ogapi.report.PrintReporter;
-import ori.ogapi.geometry.Rectangle;
-import ori.ogapi.geometry.Point;
-import ori.ogapi.geometry.Circle;
-import ori.ogapi.geometry.LinkedListSurface;
-import ori.mas.core.*;
+import java.io.PrintWriter;
 import ori.mas.actors.*;
-import ori.mas.sensors.*;
+import ori.mas.core.*;
 import ori.mas.fsm.*;
 import ori.mas.fsm.states.*;
-
-import java.io.PrintWriter;
+import ori.mas.sensors.*;
+import ori.ogapi.geometry.Circle;
+import ori.ogapi.geometry.LinkedListSurface;
+import ori.ogapi.geometry.Point;
+import ori.ogapi.report.PrintReporter;
 
 public class Main {
 
