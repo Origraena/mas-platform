@@ -23,7 +23,6 @@ import javax.swing.JFrame;
 import org.lwjgl.LWJGLException;
 import wjd.gui.control.AWTInput;
 import wjd.gui.control.EUpdateResult;
-import wjd.gui.control.IInput;
 import wjd.gui.view.AWTCanvas;
 import wjd.gui.view.Camera;
 import wjd.math.V2;
@@ -48,7 +47,7 @@ public class AWTWindow extends JFrame implements IWindow
   private AWTCanvas canvas;
   private Camera camera;
   // control
-  private IInput input;
+  private AWTInput input;
 
   /* METHODS */
 
@@ -84,6 +83,10 @@ public class AWTWindow extends JFrame implements IWindow
     setContentPane(canvas);
     // control
     input = AWTInput.getInstance();
+    addKeyListener(input);
+    addMouseListener(input);
+    addMouseMotionListener(input);
+    addMouseWheelListener(input);
     // This should always be last
     setVisible(true);
   }
@@ -98,11 +101,10 @@ public class AWTWindow extends JFrame implements IWindow
     boolean running = true;
     while(running)
     {
-      // deal with input
-      camera.processInput(input, size);
-      scene.processInput(input, size);
       // update
-      if(scene.update(1000/60) == EUpdateResult.STOP) // FIXME
+      if(camera.processInput(input, size)  == EUpdateResult.STOP
+        || scene.processInput(input, size)  == EUpdateResult.STOP
+        || scene.update(1000/60) == EUpdateResult.STOP)
           running = false;
       // queue rendering
       scene.render(canvas, camera);

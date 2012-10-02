@@ -131,9 +131,10 @@ public class AgentScene implements IWindow.IScene
   @Override
   public EUpdateResult processInput(IInput input, V2 window_size)
   {
-    // TODO
-    
-    // all clear !
-    return EUpdateResult.CONTINUE;
+    // exit if the escape key is pressed
+    if(input.isKeyHeld(IInput.EKeyCode.ESC))
+      return EUpdateResult.STOP;
+    else
+      return EUpdateResult.CONTINUE;
   }
 }

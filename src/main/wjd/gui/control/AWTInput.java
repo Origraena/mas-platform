@@ -22,6 +22,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import wjd.math.V2;
 
 /**
@@ -31,9 +33,8 @@ import wjd.math.V2;
  * @since 25 Jan, 2012
  */
 public class AWTInput implements IInput, KeyListener, MouseListener,
-  MouseMotionListener
-{
-  
+  MouseMotionListener, MouseWheelListener
+{ 
   /* NESTING */
   
   private static class Mouse
@@ -44,13 +45,16 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
       false, false, false
     };
     public V2 position = new V2(0, 0);
+    public double last_scroll = 0.0;
+
   }
 
   private static class Keyboard
   {
     public boolean pressing[] =
     {
-      false, false, false, false, false, false, false, false, false, false
+      false, false, false, false, false, false, false, false, false, false, 
+      false, false, false, false
     };
     // overall direction of arrow-key movement
     public V2 direction = new V2(0, 0);
@@ -89,13 +93,28 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   @Override
   public int getMouseWheelDelta()
   {
-    // TODO !
-    return 0;
+    int delta = (int)(mouse.last_scroll);
+    mouse.last_scroll = 0.0;
+    return delta;
   }
   
   @Override
   public V2 getKeyDirection()
   {
+    // Reset key direction vector
+    keyboard.direction.xy(0, 0);
+    
+    // Update keyboard direction vector
+    if (keyboard.pressing[EKeyCode.DOWN.ordinal()])
+      keyboard.direction.yadd(1);
+    if (keyboard.pressing[EKeyCode.UP.ordinal()])
+      keyboard.direction.yadd(-1);
+    if (keyboard.pressing[EKeyCode.RIGHT.ordinal()])
+      keyboard.direction.xadd(1);
+    if (keyboard.pressing[EKeyCode.LEFT.ordinal()])
+      keyboard.direction.xadd(-1);
+    
+    // Return the vector
     return keyboard.direction;
   }
 
@@ -175,6 +194,14 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
     Point p = e.getPoint();
     mouse.position.xy(p.x, p.y);
   }
+  
+  /* IMPLEMENTATIONS - MOUSEWHEELLISTENER */
+  
+  @Override
+  public void mouseWheelMoved(MouseWheelEvent e)
+  {
+    mouse.last_scroll = e.getPreciseWheelRotation();
+  }
 
   
   /* SUBROUTINES */
@@ -185,24 +212,16 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
     {
       // arrow keys
       case KeyEvent.VK_UP:
-        keyboard.direction.y((new_state)
-          ? Math.max(keyboard.direction.y() - 1, -1)
-          : Math.min(keyboard.direction.y() + 1, 0));
+        keyboard.pressing[EKeyCode.UP.ordinal()] = new_state;
         break;
       case KeyEvent.VK_DOWN:
-        keyboard.direction.y((new_state)
-          ? Math.min(keyboard.direction.y() + 1, 1)
-          : Math.max(keyboard.direction.y() - 1, 0));
+        keyboard.pressing[EKeyCode.DOWN.ordinal()] = new_state;
         break;
       case KeyEvent.VK_LEFT:
-        keyboard.direction.x((new_state)
-          ? Math.max(keyboard.direction.x() - 1, -1)
-          : Math.min(keyboard.direction.x() + 1, 0));
+        keyboard.pressing[EKeyCode.LEFT.ordinal()] = new_state;
         break;
       case KeyEvent.VK_RIGHT:
-        keyboard.direction.x((new_state)
-          ? Math.min(keyboard.direction.x() + 1, 1)
-          : Math.max(keyboard.direction.x() - 1, 0));
+        keyboard.pressing[EKeyCode.RIGHT.ordinal()] = new_state;
         break;
 
       // keys with location
