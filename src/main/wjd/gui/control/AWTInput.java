@@ -39,6 +39,9 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   
   private static class Mouse
   {
+    // constants
+    public static final int WHEEL_DELTA_MULTIPLIER = -180;
+    
     // mouse buttons are set out: left, middle, right
     public boolean clicking[] =
     {
@@ -93,7 +96,7 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   @Override
   public int getMouseWheelDelta()
   {
-    int delta = (int)(mouse.last_scroll);
+    int delta = (int)(mouse.last_scroll * Mouse.WHEEL_DELTA_MULTIPLIER);
     mouse.last_scroll = 0.0;
     return delta;
   }
