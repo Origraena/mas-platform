@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
 
+/**
+ * Walks randomly.
+ */
 public class PatrolState extends AbstractState {
 
 	public PatrolState() {
@@ -27,15 +30,19 @@ public class PatrolState extends AbstractState {
 	public Actor actor(Agent a, Scene world) {
 		//System.out.println("patrolstate");
 		MovementActor actor = Actors.selectMaxSpeedMovementActor(a.body().actors());
-		if (actor == null)
+		if (actor == null) {
+			System.out.println("no actor");
 			return null;
-		_angle = _angle + random(-22,22);
+		}
+		_angle = _angle + random(_minAngle,_maxAngle);
 		actor.setAngle(_angle);
 		actor.setSpeed(actor.maxSpeed());
 		return actor;
 	}
 
 	private int _angle = 0;
+	private int _minAngle = -30;
+	private int _maxAngle = 30;
 
 };
 

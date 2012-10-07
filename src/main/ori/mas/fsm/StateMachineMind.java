@@ -67,4 +67,7 @@ public class StateMachineMind extends AbstractMind {
 	private StateMachine _stateMachine;
 	private Scene _world;
 	
+	public State current() {
+			return ((StateMachine)(_stateMachine.current())).current();
+		}
 };

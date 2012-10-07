@@ -15,6 +15,24 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
 
+/**
+ * Example of SuperState.
+ * <br />
+ * This state has three children :
+ * <ul><li>Patrol,</li>
+ * <li>Follow,</li>
+ * <li>Eat.</li></ul>
+ * <br />
+ * <p>
+ * The global agent behaviour is the following, first he patrols.
+ * If he found a matching target (which gets a <code>true</code> answer
+ * to the internal filter function), he then changes to the follow state.
+ * If he loses his target, then he goes back to the patrol state, but if he
+ * goes near enough, he changes to the eat state.
+ * Once this state is reached, he eats its target (thus, gains some feed
+ * level, and kills the target), and goes back to the patrol state.
+ * </p>
+ */
 public class PredateState extends SuperState {
 
 	public PredateState() {
@@ -65,7 +83,8 @@ public class PredateState extends SuperState {
 		Transition s2tos3 = new Transition(s3) {
 			@Override
 			public boolean isValid(Agent a, Scene w) {
-				if (w.getPartlyIn(a.body()).contains((Body)(a.body().get(Properties.TARGET)))) {
+				// TODO not bounding rect
+				if (w.getPartlyIn(a.body().boundingRect()).contains((Body)(a.body().get(Properties.TARGET)))) {
 					return true;
 				}
 				return false;

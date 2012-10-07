@@ -18,7 +18,7 @@
 	<property name="doc-footer"     value=""/>
 	<property name="doc-bottom"     value="2012"/>
 
-	<property name="lib"			value="lib/ogapi-core.jar:lib/ogapi-geometry.jar"/>
+	<property name="lib"			value="lib/ogapi-core.jar:lib/ogapi-geometry.jar:lib/jinput.jar:lib/lwjgl.jar:lib/lwjgl_util.jar:lib/slick-util.jar"/>
 	<property name="lib-test"		value="${lib}:lib/junit-4.11.jar"/>
 
 	<property name="src"            value="src/main"/>

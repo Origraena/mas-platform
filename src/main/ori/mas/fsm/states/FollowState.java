@@ -32,8 +32,10 @@ public class FollowState extends AbstractState {
 	public Actor actor(Agent a, Scene world) {
 		//System.out.println("followstate");
 		MovementActor actor = Actors.selectMaxSpeedMovementActor(a.body().actors());
-		if (actor == null)
+		if (actor == null) {
+			System.out.println("no actor");
 			return null;
+		}
 		actor.setHead((Body)(a.body().get(Properties.TARGET)));
 		return actor;
 	}
