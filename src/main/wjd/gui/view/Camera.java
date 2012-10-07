@@ -125,6 +125,28 @@ public class Camera implements IInteractive
   {
     return view.contains(position);
   }
+  
+  /** Which cells of the specified grid are in view?
+   * 
+   * @param min a vector reference wherein will be written the coordinates of 
+   * the minimum grid cell.
+   * @param max a vector reference wherein will be written the coordinates of 
+   * the maximum grid cell. 
+   * @param cell_size the size of each square cell.
+   */
+  public void getVisibleGridCells(V2 min, V2 max, V2 grid_size, float cell_inv_size)
+  {
+    // top-left cell
+    min.xy((float)Math.max(0, Math.floor(view.x()*cell_inv_size)), /* col */
+          (float)Math.max(0, Math.floor(view.y()*cell_inv_size))); /* row */
+    
+    // bottom-right cell
+    max.xy((float)Math.min(grid_size.y(), Math.ceil(min.x() /* col */
+                        + view.w()*cell_inv_size) + 1),
+          (float)Math.min(grid_size.x(), Math.ceil(min.y() /* row */
+                        + view.h()*cell_inv_size) + 1)); 
+
+  }
 
   // modification
   /**
@@ -185,6 +207,18 @@ public class Camera implements IInteractive
     if (boundary != null)
       keepInsideBounds();
   }
+  
+  /* IMPLEMENTATIONS */
+  @Override
+  public EUpdateResult processInput(IInput input, V2 window_size)
+  {
+    EUpdateResult result = processKeyboard(input);
+    if(result != EUpdateResult.CONTINUE)
+      return result;
+    else
+      return processMouse(input, window_size);
+    
+  }
 
   /* SUBROUTINES */
   private void keepInsideBounds()
@@ -219,22 +253,6 @@ public class Camera implements IInteractive
     else if (overlap.y() > 0)
       view.y(boundary.y() - overlap.y() * 0.5f);
   }
-
-  
-  /* IMPLEMENTATIONS */
-  
-  @Override
-  public EUpdateResult processInput(IInput input, V2 window_size)
-  {
-    EUpdateResult result = processKeyboard(input);
-    if(result != EUpdateResult.CONTINUE)
-      return result;
-    else
-      return processMouse(input, window_size);
-    
-  }
-  
-  /* SUBROUTINES */
   
   private EUpdateResult processKeyboard(IInput input)
   {
@@ -251,7 +269,7 @@ public class Camera implements IInteractive
     V2 mouse_pos = input.getMousePosition(window_size); 
 
     // mouse near edges = pan
-    V2 scroll_dir = new V2();
+    /*V2 scroll_dir = new V2();
     if (mouse_pos.x() < SCOLL_MOUSE_DISTANCE)
       scroll_dir.x(-1);
     else if (mouse_pos.x() > window_size.x() - SCOLL_MOUSE_DISTANCE)
@@ -260,7 +278,7 @@ public class Camera implements IInteractive
       scroll_dir.y(-1);
     else if (mouse_pos.y() > window_size.y() - SCOLL_MOUSE_DISTANCE)
       scroll_dir.y(1);
-    pan(scroll_dir.scale(SCROLL_SPEED));
+    pan(scroll_dir.scale(SCROLL_SPEED));*/
 
     // mouse wheel = zoom
     int wheel = input.getMouseWheelDelta();

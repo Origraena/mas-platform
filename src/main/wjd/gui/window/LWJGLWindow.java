@@ -26,7 +26,7 @@ import static org.lwjgl.opengl.GL11.*;
 import wjd.gui.control.EUpdateResult;
 import wjd.gui.control.IInput;
 import wjd.gui.control.LWJGLInput;
-import wjd.gui.view.Camera;
+import wjd.gui.model.Scene;
 import wjd.gui.view.GLCanvas;
 import wjd.math.V2;
 
@@ -38,24 +38,44 @@ import wjd.math.V2;
  * @since 16-Feb-2012
  * @see <a href="http://lwjgl.org/">LWJGL Home Page</a>
  */
+
 public class LWJGLWindow implements IWindow
 {
   /* ATTRIBUTES */
   // window
   private V2 size;
-  // timing
-  private long t_previous = -1; // -1 => uninitialised
   // model
-  private IScene scene;
+  private Scene scene;
   // view
   private GLCanvas glCanvas;
-  private Camera camera;
   // control
   private IInput input;
 
   /* METHODS */
   
-  // life-cycle
+  /**
+   * How big is the Window?
+   *
+   * @return the vector size of the Window in pixels.
+   */
+  @Override
+  public V2 getSizeV2()
+  {
+    return size;
+  }
+  
+  /**
+   * Return the current time.
+   *
+   * @return the current system time in milliseconds using LWJGL.
+   */
+  @Override
+  public long timeNow()
+  {
+    return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+  }
+  
+  /* IMPLEMENTATION -- IWINDOW */
 
   /**
    * Create a LWJGL Display of the given size, with a corresponding OpenGL 
@@ -69,7 +89,7 @@ public class LWJGLWindow implements IWindow
    * drivers do not support hardware rendering...
    */
   @Override
-  public void create(String name, V2 size, IScene scene) throws LWJGLException
+  public void create(String name, V2 size, Scene scene) throws LWJGLException
   {
     // window
     this.size = size.floor();
@@ -83,7 +103,6 @@ public class LWJGLWindow implements IWindow
     this.scene = scene;
     // view
     glCanvas = GLCanvas.getInstance(); // must be after Display initialisation!
-    camera = new Camera(size, null); // null => no boundary
     // control
     input = LWJGLInput.getInstance();
 
@@ -105,20 +124,27 @@ public class LWJGLWindow implements IWindow
       if (Display.isVisible())
       {
         // update
-        if(camera.processInput(input, size)  == EUpdateResult.STOP
-        || scene.processInput(input, size)  == EUpdateResult.STOP
-        || scene.update(1000/60) == EUpdateResult.STOP)
-          running = false;
+        if(scene.processInput(input, size)  == EUpdateResult.STOP
+        || scene.update(TimeManager.getDelta(timeNow())) == EUpdateResult.STOP)
+        {
+          // change to new Scene if a new one if offered
+          Scene next = scene.getNext();
+          if(next != null)
+            scene = next;
+          // exit otherwise
+          else
+            running = false;
+        }
         // check for window events
         processWindow();
         // render
-        scene.render(glCanvas, camera);
+        scene.render(glCanvas, null);
       }
       else
       {
         // redraw screen if out of date
         if (Display.isDirty())
-          scene.render(glCanvas, camera);
+          scene.render(glCanvas, null);
         try
         {
           Thread.sleep(100);
@@ -148,11 +174,13 @@ public class LWJGLWindow implements IWindow
     Keyboard.destroy();
     Display.destroy();
   }
+  
+  /* SUBROUTINES */
 
   /**
    * Resize the OpenGL canvas.
    */
-  protected void resizeGL()
+  private void resizeGL()
   {
     //Here we are using a 2D Scene
     glViewport(0, 0, (int)size.x(), (int)size.y());
@@ -167,7 +195,7 @@ public class LWJGLWindow implements IWindow
     glPushMatrix();
     
     // resize camera viewport too
-    camera.setCanvasSize(new V2((int)size.x(), (int)size.y()));
+    scene.processWindowResize(new V2((int)size.x(), (int)size.y()));
   }
 
   /**
@@ -183,28 +211,5 @@ public class LWJGLWindow implements IWindow
       resizeGL();
     }
   }
-
-  /**
-   * Return the amount of time since the method was last called.
-   *
-   * @return the current time in milliseconds since this method was last called,
-   * or 0 the first time the method is called.
-   */
-  private int timeDelta()
-  {
-    long t_now = timeNow();
-    int t_delta = (t_previous < 0) ? 0 : (int) (t_now - t_previous);
-    t_previous = t_now;
-    return t_delta;
-  }
-
-  /**
-   * Return the current time.
-   *
-   * @return the current system time in milliseconds.
-   */
-  private long timeNow()
-  {
-    return (Sys.getTime() * 1000) / Sys.getTimerResolution();
-  }
 }
+

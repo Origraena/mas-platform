@@ -14,7 +14,6 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package wjd.gui.view;
 
 import java.awt.BasicStroke;
@@ -32,9 +31,9 @@ import javax.swing.JPanel;
 import wjd.math.Rect;
 import wjd.math.V2;
 
-/** 
- * 
- * @author wdyce 
+/**
+ *
+ * @author wdyce
  * @since 25 Jan, 2012
  */
 public class AWTCanvas extends JPanel implements ICanvas
@@ -44,30 +43,49 @@ public class AWTCanvas extends JPanel implements ICanvas
   {
     return new Color(c.r, c.b, c.g, c.a);
   }
-  
+
   /* POSSIBLE DRAW COMMANDS TO BE QUEUED */
   private static class DrawText
   {
     public String text;
     public V2 pos;
-    public DrawText(String text, V2 pos) { this.text = text; this.pos = pos; }
+
+    public DrawText(String text, V2 pos)
+    {
+      this.text = text;
+      this.pos = pos;
+    }
   }
+
   private static class ColourChange
   {
     public Colour colour;
-    public ColourChange(Colour colour) { this.colour = colour; }
+
+    public ColourChange(Colour colour)
+    {
+      this.colour = colour;
+    }
   }
+
   private static class LineWidthChange
   {
     public float lineWidth;
-    public LineWidthChange(float lineWidth) { this.lineWidth = lineWidth; }
+
+    public LineWidthChange(float lineWidth)
+    {
+      this.lineWidth = lineWidth;
+    }
   }
+
   private static class FontChange
   {
     public Object font;
-    public FontChange(Object font) { this.font = font; }
+
+    public FontChange(Object font)
+    {
+      this.font = font;
+    }
   }
-  
   /* ATTRIBUTES */
   private Queue<Object> draw_queue;
 
@@ -113,7 +131,7 @@ public class AWTCanvas extends JPanel implements ICanvas
     // empty the list of draw_queue
     draw_queue.clear();
   }
-  
+
   /**
    * Draw a circle outline around the specified position, using the given
    * radius.
@@ -124,7 +142,8 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void circle(V2 centre, float radius)
   {
-    draw_queue.add(new Ellipse2D.Float(centre.x(), centre.y(), radius*2, radius*2));
+    draw_queue.add(new Ellipse2D.Float(centre.x(), centre.y(), radius * 2,
+      radius * 2));
   }
 
   /**
@@ -147,7 +166,8 @@ public class AWTCanvas extends JPanel implements ICanvas
   @Override
   public void box(Rect rect)
   {
-    draw_queue.add(new Rectangle2D.Float(rect.x(), rect.y(), rect.w(), rect.h()));
+    draw_queue.
+      add(new Rectangle2D.Float(rect.x(), rect.y(), rect.w(), rect.h()));
   }
 
   /**
@@ -161,49 +181,47 @@ public class AWTCanvas extends JPanel implements ICanvas
   {
     draw_queue.add(new DrawText(string, position));
   }
-  
+
   @Override
   public void paintComponent(Graphics g)
   {
     // Get the graphics object
-    Graphics2D g2d = (Graphics2D)g;
-    
+    Graphics2D g2d = (Graphics2D) g;
+
     // Clear the screen in white
     g2d.setColor(Color.WHITE);
     g2d.fillRect(0, 0, getWidth(), getHeight());
-    
+
     // Draw each shape in black by default
     g2d.setColor(Color.BLACK);
     Object command;
-    while((command = draw_queue.poll()) != null)
-    {
+    while ((command = draw_queue.poll()) != null)
       // draw a shape
-      if(command instanceof Shape)
-        g2d.fill((Shape)command);
+      if (command instanceof Shape)
+        g2d.fill((Shape) command);
       // draw text
-      else if(command instanceof DrawText)
+      else if (command instanceof DrawText)
       {
-        DrawText text_cmd = (DrawText)command;
+        DrawText text_cmd = (DrawText) command;
         g2d.drawString(text_cmd.text, text_cmd.pos.x(), text_cmd.pos.y());
       }
       // change colour
-      else if(command instanceof ColourChange)
-        g2d.setColor(ColourToAWTColor(((ColourChange)command).colour));
+      else if (command instanceof ColourChange)
+        g2d.setColor(ColourToAWTColor(((ColourChange) command).colour));
       // change line width
-      else if(command instanceof LineWidthChange)
-        g2d.setStroke(new BasicStroke(((LineWidthChange)command).lineWidth));
+      else if (command instanceof LineWidthChange)
+        g2d.setStroke(new BasicStroke(((LineWidthChange) command).lineWidth));
       // change new_font
-      else if(command instanceof FontChange)
+      else if (command instanceof FontChange)
       {
-        Object new_font = ((FontChange)command).font;
-        if(new_font instanceof Font)
-          g2d.setFont((Font)(new_font));
+        Object new_font = ((FontChange) command).font;
+        if (new_font instanceof Font)
+          g2d.setFont((Font) (new_font));
         else
           System.out.println("Incorrect font type " + new_font);
       }
       // unknown or unsupported command
       else
         System.out.println("Unrecognized command type " + command);
-    }
   }
 }

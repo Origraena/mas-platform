@@ -33,6 +33,4 @@ public interface IDynamic
    * ordinary has happened.
    */
   public EUpdateResult update(int t_delta);
-  
-  
 }

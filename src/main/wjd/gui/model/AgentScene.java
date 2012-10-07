@@ -34,6 +34,8 @@ import ori.ogapi.geometry.Point;
 import ori.ogapi.util.Iterator;
 import wjd.gui.control.EUpdateResult;
 import wjd.gui.control.IInput;
+import wjd.gui.control.IInput.KeyPress;
+import wjd.gui.control.IInput.MouseClick;
 import wjd.gui.view.Camera;
 import wjd.gui.view.ICanvas;
 import wjd.gui.window.IWindow;
@@ -45,7 +47,7 @@ import wjd.math.V2;
  * @author wdyce
  * @since Sep 27, 2012
  */
-public class AgentScene implements IWindow.IScene
+public class AgentScene extends Scene
 {
   /* CONSTANTS */
   private static final V2 HELLO_POS = new V2(100, 100);
@@ -89,11 +91,15 @@ public class AgentScene implements IWindow.IScene
   
   /* ATTRIBUTES */
   private World world;
+  private Camera camera;
 
   /// METHODS
   // construction
-  public AgentScene()
+  public AgentScene(IWindow window)
   {
+    super(window);
+    // view
+    camera = new Camera(window.getSizeV2(), null); // null => no boundary
     // start up
     reset();
   }
@@ -127,7 +133,7 @@ public class AgentScene implements IWindow.IScene
   }
 
   @Override
-  public void render(ICanvas canvas, Camera camera)
+  public void render(ICanvas canvas, Camera unused)
   {
     // clear the screen
     canvas.clear();
@@ -147,12 +153,30 @@ public class AgentScene implements IWindow.IScene
   }
 
   @Override
-  public EUpdateResult processInput(IInput input, V2 window_size)
+  public EUpdateResult processStaticInput(IInput input, V2 window_size)
   {
     // exit if the escape key is pressed
     if(input.isKeyHeld(IInput.EKeyCode.ESC))
       return EUpdateResult.STOP;
     else
       return EUpdateResult.CONTINUE;
+  }
+
+  @Override
+  public void processWindowResize(V2 new_size)
+  {
+    camera.setCanvasSize(new_size);
+  }
+
+  @Override
+  public EUpdateResult processKeyPress(KeyPress event)
+  {
+    return EUpdateResult.CONTINUE;
+  }
+
+  @Override
+  public EUpdateResult processMouseClick(MouseClick event)
+  {
+    return EUpdateResult.CONTINUE;
   }
 }

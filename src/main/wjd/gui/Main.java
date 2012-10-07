@@ -67,12 +67,11 @@ abstract class Main
      * -Djava.library.path=/a/path/to/lwjgl-2.8.4/native/your_operating_system
      */
     IWindow window = null;
-    AgentScene scene = new AgentScene();
     try
     {
       // by default try to create a window using LWJGL's native OpenGL
       window = new LWJGLWindow();
-      window.create(WIN_NAME, WIN_SIZE, scene);
+      window.create(WIN_NAME, WIN_SIZE, new AgentScene(window));
       window.run();
       window.destroy(); 
     }
@@ -85,7 +84,7 @@ abstract class Main
         LOGGER.log(Level.WARNING, "Defaulting to AWT Window");
         // default to AWT if there's a problem with LWJGL
         window = new AWTWindow();
-        window.create(WIN_NAME, WIN_SIZE, scene);
+        window.create(WIN_NAME, WIN_SIZE, new AgentScene(window));
         window.run();
       }
       catch (Exception awt_ex)

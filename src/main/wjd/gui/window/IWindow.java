@@ -16,27 +16,54 @@
  */
 package wjd.gui.window;
 
-import wjd.gui.control.IDynamic;
-import wjd.gui.control.IInteractive;
-import wjd.gui.view.IVisible;
 import wjd.math.V2;
+import wjd.gui.model.Scene;
 
 /**
- * @author wdyce 
+ * @author wdyce
  * @since 1 Aug, 2012
  */
-public interface IWindow 
+public interface IWindow
 {
   /* NESTING */
-  
-  public interface IScene extends IDynamic, IVisible, IInteractive { }
-  
+  public abstract class TimeManager
+  {
+    // attributes
+    private static long t_previous = -1; // -1 => uninitialised
+
+    /**
+     * Return the amount of time since the method was last called.
+     *
+     * @param t_now the current system time in milliseconds.
+     * @return the current time in milliseconds since this method was last
+     * called, or 0 the first time the method is called.
+     */
+    public static int getDelta(long t_now)
+    {
+      int t_delta = (t_previous < 0) ? 0 : (int) (t_now - t_previous);
+      t_previous = t_now;
+      return t_delta;
+    }
+  }
   /* CONSTANTS */
-  
   public static final int MAX_FPS = 60;
+
+  /* ACCESSORS */
+  /**
+   * How big is the Window?
+   *
+   * @return the vector size of the Window in pixels.
+   */
+  public V2 getSizeV2();
   
+    /**
+   * Return the current time.
+   *
+   * @return the current system time in milliseconds.
+   */
+  public long timeNow();
+
   /* LIFE CYCLE */
-  
   /**
    * Create the IWindow and OpenGL canvas based on the size and other parameters
    * that were given to the constructor.
@@ -47,16 +74,16 @@ public interface IWindow
    * @param height the height of the IWindow, in pixels.
    * @throws an Exception if there's or problem: this is optional.
    */
-  public void create(String name, V2 size, IScene scene) throws Exception;
-  
+  public void create(String name, V2 size, Scene scene) throws Exception;
+
   /**
    * Launch the application and run until some event interrupts its execution.
    */
   public abstract void run();
-  
+
   /**
    * Clean up anything we might have allocated.
    */
   public void destroy();
-  
 }
+

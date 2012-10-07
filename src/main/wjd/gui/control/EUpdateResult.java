@@ -16,6 +16,7 @@
  */
 package wjd.gui.control;
 
+
 /**
  * A value of this type is returned when certain objects are updated.
  *
@@ -29,7 +30,12 @@ public enum EUpdateResult
    */
   CONTINUE,
   /**
-   * The object calling the update should stop doing so.
+   * The object calling the update should stop doing so and either switch it for
+   * another one or exit.
    */
-  STOP
+  STOP,
+  /**
+   * The updated object should be deleted.
+   */
+  DELETE_ME
 };

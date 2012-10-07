@@ -13,6 +13,9 @@ import java.util.Map;
 import javax.swing.Timer;
 
 /**
+ * On Unix Systems the OS generates "phantom" key-pressed and -released events
+ * when users hold down keys: obviously we don't want this in a game.
+ *
  * @author Endre Stølsvik
  */
 public class KeyRepeatFix implements AWTEventListener

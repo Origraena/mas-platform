@@ -139,8 +139,8 @@ public class GLCanvas implements ICanvas
   public void line(V2 start, V2 end)
   {
     glBegin(GL_LINES);
-    glVertex2d(start.x(), start.y());
-    glVertex2d(end.x(), end.y());
+      glVertex2d(start.x(), start.y());
+      glVertex2d(end.x(), end.y());
     glEnd();
   }
 
@@ -153,10 +153,10 @@ public class GLCanvas implements ICanvas
   public void box(Rect rect)
   {
     glBegin(GL_QUADS);
-    glVertex2f(rect.x(), rect.y());
-    glVertex2f(rect.x() + rect.w(), rect.y());
-    glVertex2f(rect.x(), rect.y() + rect.h());
-    glVertex2f(rect.x() + rect.w(), rect.y() + rect.h());
+      glVertex2f(rect.x(), rect.y());
+      glVertex2f(rect.x() + rect.w(), rect.y());
+      glVertex2f(rect.x() + rect.w(), rect.y() + rect.h());
+      glVertex2f(rect.x(), rect.y() + rect.h());
     glEnd();
   }
 

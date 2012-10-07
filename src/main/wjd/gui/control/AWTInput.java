@@ -113,8 +113,8 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   
   /* ATTRIBUTES */
   
-  AWTInput.Mouse mouse;
-  AWTInput.Keyboard keyboard;
+  Mouse mouse;
+  Keyboard keyboard;
   LimitedQueue<IInput.Event> events 
     = new LimitedQueue<IInput.Event>(MAX_EVENTS);
   

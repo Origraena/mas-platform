@@ -23,8 +23,8 @@ import javax.swing.JFrame;
 import org.lwjgl.LWJGLException;
 import wjd.gui.control.AWTInput;
 import wjd.gui.control.EUpdateResult;
+import wjd.gui.model.Scene;
 import wjd.gui.view.AWTCanvas;
-import wjd.gui.view.Camera;
 import wjd.math.V2;
 
 /** 
@@ -42,16 +42,38 @@ public class AWTWindow extends JFrame implements IWindow
   // window
   private V2 size;
   // model
-  private IScene scene;
+  private Scene scene;
   // view
   private AWTCanvas canvas;
-  private Camera camera;
   // control
   private AWTInput input;
 
   /* METHODS */
+  
+  /**
+   * How big is the Window?
+   *
+   * @return the vector size of the Window in pixels.
+   */
+  @Override
+  public V2 getSizeV2()
+  {
+    return size;
+  }
+    
+  /**
+   * Return the current time using the standard Java System method.
+   *
+   * @return the current system time in milliseconds using LWJGL.
+   */
+  @Override
+  public long timeNow()
+  {
+    return System.currentTimeMillis();
+  }
+  
 
-  // life-cycle
+  /* IMPLEMENTATIONS -- IWINDOW */
   
   /**
    * Create the AWT JFrame IWindow of the given size, with a corresponding JPanel 
@@ -65,11 +87,11 @@ public class AWTWindow extends JFrame implements IWindow
    * drivers do not support hardware rendering...
    */
   @Override
-  public void create(String name, V2 size, IScene scene) throws LWJGLException
+  public void create(String name, V2 size, Scene scene)
   {
     // window
     this.size = size;
-    // Set up AWT window
+    // set up AWT window
     setTitle(name);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setSize((int)size.x(), (int)size.y());
@@ -79,7 +101,6 @@ public class AWTWindow extends JFrame implements IWindow
     this.scene = scene;
     // view
     canvas = new AWTCanvas();
-    camera = new Camera(size, null); // null => no boundary
     setContentPane(canvas);
     // control
     input = AWTInput.getInstance();
@@ -102,12 +123,19 @@ public class AWTWindow extends JFrame implements IWindow
     while(running)
     {
       // update
-      if(camera.processInput(input, size)  == EUpdateResult.STOP
-        || scene.processInput(input, size)  == EUpdateResult.STOP
-        || scene.update(1000/60) == EUpdateResult.STOP)
-          running = false;
+      if(scene.processInput(input, size)  == EUpdateResult.STOP
+        || scene.update(TimeManager.getDelta(timeNow())) == EUpdateResult.STOP)
+      {
+          // change to new Scene if a new one if offered
+          Scene next = scene.getNext();
+          if(next != null)
+            scene = next;
+          // exit otherwise
+          else
+            running = false;
+      }
       // queue rendering
-      scene.render(canvas, camera);
+      scene.render(canvas, null); // use the Scene's own camera where applicable
       repaint();
 
       // Catch exceptions
