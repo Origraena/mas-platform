@@ -76,24 +76,13 @@ abstract class Main
       window.run();
       window.destroy(); 
     }
-<<<<<<< HEAD
     catch(UnsatisfiedLinkError|LWJGLException lwjgl_ex)
-=======
-    catch(UnsatisfiedLinkError lwjglex)
->>>>>>> d9969e60e82e320e9ca02fe697a24278575e7035
     {
       try
       {
         // You probably forgot to use -Djava.library.path=...
         LOGGER.log(Level.WARNING, lwjgl_ex.toString(), lwjgl_ex);
         LOGGER.log(Level.WARNING, "Defaulting to AWT Window");
-<<<<<<< HEAD
-=======
-        // the window does not need to be destroyed since an
-        // unsatisfied linkd error means no access to native
-        // libraries
-    //    window.destroy();
->>>>>>> d9969e60e82e320e9ca02fe697a24278575e7035
         // default to AWT if there's a problem with LWJGL
         window = new AWTWindow();
         window.create(WIN_NAME, WIN_SIZE, scene);
