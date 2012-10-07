@@ -21,27 +21,106 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import wjd.math.V2;
 
-/** 
-* @author wdyce
-* @since 01-Oct-2012
-*/
+/**
+ * @author wdyce
+ * @since 01-Oct-2012
+ */
 public class LWJGLInput implements IInput
 {
-  /* ATTRIBUTES */
-  private V2 key_direction = new V2(),
-             mouse_position = new V2();
-  
+  /* FUNCTIONS */
+  private static int bridgeKeyEvent(EKeyCode code)
+  {
+    switch (code)
+    {
+      case L_SHIFT:
+        return Keyboard.KEY_LSHIFT;
+      case L_CTRL:
+        return Keyboard.KEY_LCONTROL;
+      case L_ALT:
+        return Keyboard.KEY_LMENU;
+      case SPACE:
+        return Keyboard.KEY_SPACE;
+      case R_ALT:
+        return Keyboard.KEY_RMENU;
+      case R_CTRL:
+        return Keyboard.KEY_RCONTROL;
+      case R_SHIFT:
+        return Keyboard.KEY_RSHIFT;
+      case ENTER:
+        return Keyboard.KEY_RETURN;
+      case ESC:
+        return Keyboard.KEY_ESCAPE;
+      case BACKSPACE:
+        return Keyboard.KEY_BACK;
+      default:
+        return Keyboard.KEY_NONE;
+    }
+  }
+
+  private static EKeyCode bridgeKeyEvent(int code)
+  {
+    switch (code)
+    {
+      case Keyboard.KEY_LSHIFT:
+        return EKeyCode.L_SHIFT;
+      case Keyboard.KEY_LCONTROL:
+        return EKeyCode.L_CTRL;
+      case Keyboard.KEY_LMENU:
+        return EKeyCode.L_ALT;
+      case Keyboard.KEY_SPACE:
+        return EKeyCode.SPACE;
+      case Keyboard.KEY_RMENU:
+        return EKeyCode.R_ALT;
+      case Keyboard.KEY_RCONTROL:
+        return EKeyCode.R_CTRL;
+      case Keyboard.KEY_RSHIFT:
+        return EKeyCode.R_SHIFT;
+      case Keyboard.KEY_RETURN:
+        return EKeyCode.ENTER;
+      case Keyboard.KEY_ESCAPE:
+        return EKeyCode.ESC;
+      case Keyboard.KEY_BACK:
+        ;
+      default:
+        return null;
+    }
+  }
+
+  private static int bridgeMouseEvent(EMouseButton code)
+  {
+    return code.ordinal();
+  }
+
+  private static EMouseButton bridgeMouseEvent(int code)
+  {
+    switch (code)
+    {
+      case 0:
+        return EMouseButton.LEFT;
+      case 1:
+        return EMouseButton.MIDDLE;
+      case 2:
+        return EMouseButton.RIGHT;
+      default:
+        return null;
+    }
+  }
   /* SINGLETON */
-  
   private static LWJGLInput instance = null;
-  
+
   public static LWJGLInput getInstance() throws LWJGLException
   {
-    if(instance == null)
+    if (instance == null)
       instance = new LWJGLInput();
     return instance;
   }
-  
+  /* ATTRIBUTES */
+  private V2 key_direction = new V2(),
+    mouse_position = new V2();
+  private Event nextMouseEvent;
+  private Event nextKeyEvent;
+
+  /* METHODS */
   private LWJGLInput() throws LWJGLException
   {
     // LWJGL - Keyboard
@@ -51,9 +130,8 @@ public class LWJGLInput implements IInput
     Mouse.setGrabbed(false);
     Mouse.create();
   }
-  
+
   /* IMPLEMENTATIONS -- IINPUT */
-  
   @Override
   public int getMouseWheelDelta()
   {
@@ -72,7 +150,7 @@ public class LWJGLInput implements IInput
   {
     // Reset key direction vector
     key_direction.xy(0, 0);
-    
+
     // Update keyboard direction vector
     if (Keyboard.isKeyDown(Keyboard.KEY_DOWN))
       key_direction.yadd(1);
@@ -82,7 +160,7 @@ public class LWJGLInput implements IInput
       key_direction.xadd(1);
     if (Keyboard.isKeyDown(Keyboard.KEY_LEFT))
       key_direction.xadd(-1);
-    
+
     // Return the vector
     return key_direction;
   }
@@ -90,20 +168,10 @@ public class LWJGLInput implements IInput
   @Override
   public boolean isKeyHeld(EKeyCode code)
   {
-    switch(code)
-    {
-      case L_SHIFT: return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
-      case L_CTRL: return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
-      case L_ALT: return Keyboard.isKeyDown(Keyboard.KEY_LMENU);
-      case SPACE: return Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-      case R_ALT: return Keyboard.isKeyDown(Keyboard.KEY_RMENU);
-      case R_CTRL: return Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
-      case R_SHIFT: return Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
-      case ENTER: return Keyboard.isKeyDown(Keyboard.KEY_RETURN);
-      case ESC: return Keyboard.isKeyDown(Keyboard.KEY_ESCAPE);
-      case BACKSPACE: return Keyboard.isKeyDown(Keyboard.KEY_BACK);
-      default: return false;
-    }
+    int lwjgl_code = bridgeKeyEvent(code);
+    return (lwjgl_code != Keyboard.KEY_NONE)
+      ? Keyboard.isKeyDown(lwjgl_code)
+      : false;
   }
 
   @Override
@@ -112,4 +180,56 @@ public class LWJGLInput implements IInput
     return Mouse.isButtonDown(button.ordinal());
   }
 
+  @Override
+  public Event pollEvents()
+  {
+    // get a new event of each type
+    if (nextMouseEvent == null)
+      nextMouseEvent = nextMouseClick();
+    if (nextKeyEvent == null)
+      nextKeyEvent = nextKeyPress();
+
+    // choose whether to return a Mouse or Keyboard event
+    Event nextEvent;
+    if (nextMouseEvent == null && nextKeyEvent == null)
+      nextEvent = null;
+    else if (nextMouseEvent != null && nextKeyEvent == null)
+      nextEvent = nextMouseEvent;
+    else if (nextKeyEvent != null && nextMouseEvent == null)
+      nextEvent = nextKeyEvent;
+    else // if (nextKeyEvent != null && nextMouseEvent != null)
+    
+      // choose the oldest Event
+      nextEvent = (nextMouseEvent.t_stamp < nextKeyEvent.t_stamp)
+        ? nextMouseEvent : nextKeyEvent;
+
+    // don't return the same event twice!
+    if (nextEvent == nextKeyEvent)
+      nextKeyEvent = null;
+    else if (nextEvent == nextMouseEvent)
+      nextMouseEvent = null;
+
+    // all done !
+    return nextEvent;
+  }
+  /* SUBROUTINES */
+
+  public KeyPress nextKeyPress()
+  {
+    return (Keyboard.next())
+      ? new KeyPress(Keyboard.getEventNanoseconds() / 1000,
+      bridgeKeyEvent(Keyboard.getEventKey()),
+      Keyboard.getEventKeyState())
+      : null;
+  }
+
+  public MouseClick nextMouseClick()
+  {
+    while (Mouse.next())
+      if (Mouse.getEventButton() != -1)
+        return new MouseClick(Mouse.getEventNanoseconds() / 1000,
+          bridgeMouseEvent(Keyboard.getEventKey()),
+          Mouse.getEventButtonState());
+    return null;
+  }
 }

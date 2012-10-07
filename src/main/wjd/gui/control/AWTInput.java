@@ -24,7 +24,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import wjd.gui.control.IInput.EKeyCode;
 import wjd.math.V2;
+import wjd.util.LimitedQueue;
 
 /**
  * Adaptor interface to deal with input coming from either LWJGL or AWT.
@@ -63,6 +65,40 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
     public V2 direction = new V2(0, 0);
   }
   
+  /* FUNCTIONS */
+  private EKeyCode bridgeKeyEvent(KeyEvent e)
+  {
+    switch(e.getKeyCode())
+    {
+      // arrow keys
+      case KeyEvent.VK_UP: return EKeyCode.UP;
+      case KeyEvent.VK_DOWN: return EKeyCode.DOWN;
+      case KeyEvent.VK_LEFT: return EKeyCode.LEFT;
+      case KeyEvent.VK_RIGHT: return EKeyCode.RIGHT;
+
+      // keys with location
+      case KeyEvent.VK_SHIFT: 
+        return (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) 
+                                    ? EKeyCode.L_SHIFT : EKeyCode.R_SHIFT;
+      case KeyEvent.VK_CONTROL: 
+        return (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) 
+                                    ? EKeyCode.L_CTRL : EKeyCode.R_CTRL;
+      case KeyEvent.VK_ALT: 
+        return (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT) 
+                                    ? EKeyCode.L_ALT : EKeyCode.R_ALT;
+      // absolute keys
+      case KeyEvent.VK_SPACE: return EKeyCode.SPACE;
+      case KeyEvent.VK_ENTER: return EKeyCode.ENTER;
+      case KeyEvent.VK_ESCAPE: return EKeyCode.ESC;
+        
+      // unknown
+      default: return null;
+    }
+  }
+  
+  /* CONSTANTS */
+  private static final int MAX_EVENTS = 10;
+  
   
   /* SINGLETON */
   
@@ -74,29 +110,31 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
       instance = new AWTInput();
     return instance;
   }
+  
   /* ATTRIBUTES */
-  Mouse mouse;
-  Keyboard keyboard;
-
+  
+  AWTInput.Mouse mouse;
+  AWTInput.Keyboard keyboard;
+  LimitedQueue<IInput.Event> events 
+    = new LimitedQueue<IInput.Event>(MAX_EVENTS);
   
   /* METHODS */
   
   // creation
   private AWTInput()
   {
-    mouse = new Mouse();
-    keyboard = new Keyboard();
-    // Java has a problem with Linux key repeats: this hack patches the issue
+    mouse = new AWTInput.Mouse();
+    keyboard = new AWTInput.Keyboard();
+    // No phantom KeyReleased Events on Linux please!
     KeyRepeatFix.install();
   }
-
   
   /* IMPLEMENTATIONS - IINPUT */
   
   @Override
   public int getMouseWheelDelta()
   {
-    int delta = (int)(mouse.last_scroll * Mouse.WHEEL_DELTA_MULTIPLIER);
+    int delta = (int)(mouse.last_scroll * AWTInput.Mouse.WHEEL_DELTA_MULTIPLIER);
     mouse.last_scroll = 0.0;
     return delta;
   }
@@ -139,6 +177,12 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
     return mouse.position;
   }
   
+  @Override
+  public Event pollEvents()
+  {
+    return events.poll();
+  }
+  
   /* IMPLEMENTATIONS - KEYLISTENER */
 
   @Override
@@ -148,12 +192,20 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   @Override
   public void keyPressed(KeyEvent e)
   {
+    EKeyCode code = bridgeKeyEvent(e);
+    
+    // no key repeats!
+    if(isKeyHeld(code))
+      return;
+    
+    events.add(new KeyPress(System.currentTimeMillis(), bridgeKeyEvent(e), true));
     setKeyState(e, true);
   }
 
   @Override
   public void keyReleased(KeyEvent e)
   {
+    events.add(new KeyPress(System.currentTimeMillis(), bridgeKeyEvent(e), false));
     setKeyState(e, false);
   }
 
@@ -203,7 +255,7 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   @Override
   public void mouseWheelMoved(MouseWheelEvent e)
   {
-    // mouse.last_scroll = e.getPreciseWheelRotation();
+    //mouse.last_scroll = e.getPreciseWheelRotation();
     mouse.last_scroll = e.getWheelRotation();
   }
 
@@ -212,55 +264,8 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   
   private void setKeyState(KeyEvent e, boolean new_state)
   {
-    switch (e.getKeyCode())
-    {
-      // arrow keys
-      case KeyEvent.VK_UP:
-        keyboard.pressing[EKeyCode.UP.ordinal()] = new_state;
-        break;
-      case KeyEvent.VK_DOWN:
-        keyboard.pressing[EKeyCode.DOWN.ordinal()] = new_state;
-        break;
-      case KeyEvent.VK_LEFT:
-        keyboard.pressing[EKeyCode.LEFT.ordinal()] = new_state;
-        break;
-      case KeyEvent.VK_RIGHT:
-        keyboard.pressing[EKeyCode.RIGHT.ordinal()] = new_state;
-        break;
-
-      // keys with location
-      case KeyEvent.VK_SHIFT:
-        if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT)
-          keyboard.pressing[EKeyCode.L_SHIFT.ordinal()] = new_state;
-        else
-          keyboard.pressing[EKeyCode.R_SHIFT.ordinal()] = new_state;
-        break;
-      case KeyEvent.VK_CONTROL:
-        if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT)
-          keyboard.pressing[EKeyCode.L_CTRL.ordinal()] = new_state;
-        else
-          keyboard.pressing[EKeyCode.R_CTRL.ordinal()] = new_state;
-        break;
-      case KeyEvent.VK_ALT:
-        if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_LEFT)
-          keyboard.pressing[EKeyCode.L_ALT.ordinal()] = new_state;
-        else
-          keyboard.pressing[EKeyCode.R_ALT.ordinal()] = new_state;
-        break;
-
-      // absolute keys
-      case KeyEvent.VK_SPACE:
-        keyboard.pressing[EKeyCode.SPACE.ordinal()] = new_state;
-        break;
-      case KeyEvent.VK_ENTER:
-        keyboard.pressing[EKeyCode.ENTER.ordinal()] = new_state;
-        break;
-      case KeyEvent.VK_ESCAPE:
-        keyboard.pressing[EKeyCode.ESC.ordinal()] = new_state;
-        break;
-
-      default:
-        break;
-    }
+    EKeyCode code = bridgeKeyEvent(e);
+    if(code != null)
+      keyboard.pressing[code.ordinal()] = new_state;
   }
 }

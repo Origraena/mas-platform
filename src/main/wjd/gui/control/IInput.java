@@ -32,9 +32,46 @@ public interface IInput
     UP, RIGHT, DOWN, LEFT, L_SHIFT, L_CTRL, L_ALT, SPACE, R_ALT, R_CTRL,
     R_SHIFT, ENTER, ESC, BACKSPACE
   }
+
   public static enum EMouseButton
   {
     LEFT, MIDDLE, RIGHT
+  }
+
+  public static class Event
+  {
+    public long t_stamp;
+
+    public Event(long t_stamp)
+    {
+      this.t_stamp = t_stamp;
+    }
+  }
+
+  public static class KeyPress extends IInput.Event
+  {
+    public IInput.EKeyCode key;
+    public boolean state;
+
+    public KeyPress(long t_stamp, IInput.EKeyCode key, boolean state)
+    {
+      super(t_stamp);
+      this.key = key;
+      this.state = state;
+    }
+  }
+
+  public static class MouseClick extends IInput.Event
+  {
+    public IInput.EMouseButton button;
+    public boolean state;
+
+    public MouseClick(long t_stamp, IInput.EMouseButton button, boolean state)
+    {
+      super(t_stamp);
+      this.button = button;
+      this.state = state;
+    }
   }
 
   /* METHODS */
@@ -67,7 +104,7 @@ public interface IInput
    * @param code the key the state of which we wish to learn.
    * @return true if the specified key is being pressed, false otherwise.
    */
-  public boolean isKeyHeld(EKeyCode code);
+  public boolean isKeyHeld(IInput.EKeyCode code);
 
   /**
    * Check whether a given mouse button is currently being pressed on not.
@@ -75,5 +112,10 @@ public interface IInput
    * @param button the button the state of which we wish to learn.
    * @return true if the specified button is being pressed, false otherwise.
    */
-  public boolean isMouseClicking(EMouseButton button);
+  public boolean isMouseClicking(IInput.EMouseButton button);
+
+  /**
+   * Get the next input event.
+   */
+  public IInput.Event pollEvents();
 }

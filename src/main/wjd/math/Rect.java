@@ -84,8 +84,8 @@ public class Rect
   {
     x = position.x();
     y = position.y();
-    w = position.x();
-    h = position.y();
+    w = size.x();
+    h = size.y();
   }
 
   // accessors
