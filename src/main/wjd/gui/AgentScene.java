@@ -37,9 +37,7 @@ import wjd.amb.control.IInput;
 import wjd.amb.control.IInput.KeyPress;
 import wjd.amb.control.IInput.MouseClick;
 import wjd.amb.model.Scene;
-import wjd.amb.view.Camera;
 import wjd.amb.view.ICanvas;
-import wjd.amb.window.IWindow;
 import wjd.math.V2;
 
 /**
@@ -92,15 +90,11 @@ public class AgentScene extends Scene
   
   /* ATTRIBUTES */
   private World world;
-  private Camera camera;
 
   /// METHODS
   // construction
-  public AgentScene(IWindow window)
+  public AgentScene()
   {
-    super(window);
-    // view
-    camera = new Camera(new V2(), null); // null => no boundary
     // start up
     reset();
   }
@@ -134,39 +128,32 @@ public class AgentScene extends Scene
   }
 
   @Override
-  public void render(ICanvas canvas, Camera unused)
+  public void render(ICanvas canvas)
   {
     // clear the screen
     canvas.clear();
     
     // draw agents
     Iterator itr = world.iterator();
-    int i =0;
+    V2 vpos = new V2();
     while (itr.hasNext())
     {
       Point pos = ((Agent) itr.next()).body().center();
-      canvas.circle(camera.getPerspective(new V2(pos.x, pos.y)), 
-                                            8 * camera.getZoom());
+      canvas.circle(vpos.xy(pos.x, pos.y), 8);
     }
 
     // draw hello text
-    canvas.text(HELLO_TEXT, camera.getPerspective(HELLO_POS));
+    canvas.text(HELLO_TEXT, HELLO_POS);
   }
 
   @Override
-  public EUpdateResult processStaticInput(IInput input, V2 window_size)
+  public EUpdateResult processStaticInput(IInput input)
   {
     // exit if the escape key is pressed
     if(input.isKeyHeld(IInput.EKeyCode.ESC))
       return EUpdateResult.STOP;
     else
       return EUpdateResult.CONTINUE;
-  }
-
-  @Override
-  public void processWindowResize(V2 new_size)
-  {
-    camera.setCanvasSize(new_size);
   }
 
   @Override

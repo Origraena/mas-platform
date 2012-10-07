@@ -16,14 +16,7 @@
  */
 package wjd.gui;
 
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.lwjgl.LWJGLException;
-import wjd.amb.window.AWTWindow;
-import wjd.amb.window.IWindow;
-import wjd.amb.window.LWJGLWindow;
+import wjd.amb.AmbitionEngine;
 import wjd.math.V2;
 
 /**
@@ -34,77 +27,20 @@ import wjd.math.V2;
  */
 abstract class Main
 {
-  /* CLASS NAMESPACE CONSTANTS */
-  public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
-  public static final String WIN_NAME = "Virtual Societies";
-  public static final V2 WIN_SIZE = new V2(640, 480);
-
-  /* CLASS INITIALISATION */
-  static
-  {
-    try
-    {
-      // externalise logs if possible
-      LOGGER.addHandler(new FileHandler("log.xml", true));
-    }
-    catch (IOException ex)
-    {
-      // warning if not
-      LOGGER.log(Level.WARNING, ex.toString(), ex);
-    }
-  }
-
+  /* CONSTANTS */
+  
+  private static final String WIN_NAME = "Mult-agent System";
+  private static final V2 WIN_SIZE = new V2(640, 480);
+  
   /* PROGRAM ENTRANCE POINT */
+  
   public static void main(String[] args)
   {
-    for (String s: args)
-        System.out.println(s);
-    
     /* NB - LWJGL uses native libraries, so this program will crash at run-time
      * unless you indicate to the JVM where to find them! As such the program
      * must be run with the following argument: 
      * -Djava.library.path=/a/path/to/lwjgl-2.8.4/native/your_operating_system
      */
-    IWindow window = null;
-    try
-    {
-      // by default try to create a window using LWJGL's native OpenGL
-      LOGGER.log(Level.INFO, "Launching LWJGL Window");
-      window = new LWJGLWindow();
-      window.create(WIN_NAME, WIN_SIZE, new AgentScene(window));
-      window.run();
-      window.destroy(); 
-    }
-    catch(UnsatisfiedLinkError|LWJGLException lwjgl_ex)
-    {
-      try
-      {
-        // You probably forgot to use -Djava.library.path=...
-        LOGGER.log(Level.WARNING, lwjgl_ex.toString(), lwjgl_ex);
-        // default to AWT if there's a problem with LWJGL
-        LOGGER.log(Level.INFO, "Launching AWT Window");
-        window = new AWTWindow();
-        window.create(WIN_NAME, WIN_SIZE, new AgentScene(window));
-        window.run();
-      }
-      catch (Exception awt_ex)
-      {
-        // A generic error caused by the code, not the library
-        LOGGER.log(Level.SEVERE, awt_ex.toString(), awt_ex);
-      }
-    }
-    catch(Exception ex)
-    {
-      // A generic error caused by the code, not the library
-      LOGGER.log(Level.SEVERE, ex.toString(), ex);
-    }
-    finally
-    {
-      // Window can be safely destroy here, as AWT should have replace LWJGL
-      if(window != null)
-        window.destroy();
-    }
+    AmbitionEngine.launch(WIN_NAME, WIN_SIZE, new AgentScene());
   }
-  
-  /* CLASS SUBROUTINES */
 }
