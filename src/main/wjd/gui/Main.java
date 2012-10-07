@@ -58,6 +58,9 @@ abstract class Main
   /* PROGRAM ENTRANCE POINT */
   public static void main(String[] args)
   {
+    for (String s: args)
+        System.out.println(s);
+    
     /* NB - LWJGL uses native libraries, so this program will crash at run-time
      * unless you indicate to the JVM where to find them! As such the program
      * must be run with the following argument: 
@@ -71,37 +74,36 @@ abstract class Main
       window = new LWJGLWindow();
       window.create(WIN_NAME, WIN_SIZE, scene);
       window.run();
-      
+      window.destroy(); 
     }
-    catch(LWJGLException lwjglex)
+    catch(UnsatisfiedLinkError|LWJGLException lwjgl_ex)
     {
       try
       {
-        // LWJGL failed, destroy it !
-        LOGGER.log(Level.WARNING, lwjglex.toString(), lwjglex);
+        // You probably forgot to use -Djava.library.path=...
+        LOGGER.log(Level.WARNING, lwjgl_ex.toString(), lwjgl_ex);
         LOGGER.log(Level.WARNING, "Defaulting to AWT Window");
-        window.destroy();
         // default to AWT if there's a problem with LWJGL
         window = new AWTWindow();
         window.create(WIN_NAME, WIN_SIZE, scene);
         window.run();
       }
-      catch (Exception ex)
+      catch (Exception awt_ex)
       {
-        // in theory AWTWindow shouldn't throw any exception, but you never know
-        LOGGER.log(Level.SEVERE, ex.toString(), ex);
+        // A generic error caused by the code, not the library
+        LOGGER.log(Level.SEVERE, awt_ex.toString(), awt_ex);
       }
     }
-    catch (Exception ex)
+    catch(Exception ex)
     {
-      // catch non-LWJGL exceptions coming from the LWJGL Window
+      // A generic error caused by the code, not the library
       LOGGER.log(Level.SEVERE, ex.toString(), ex);
     }
     finally
     {
-      // clean-up is required because of native code
-      if (window != null)
-        window.destroy(); 
+      // Window can be safely destroy here, as AWT should have replace LWJGL
+      if(window != null)
+        window.destroy();
     }
   }
   
