@@ -21,10 +21,9 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
-import wjd.gui.model.AgentScene;
-import wjd.gui.window.AWTWindow;
-import wjd.gui.window.IWindow;
-import wjd.gui.window.LWJGLWindow;
+import wjd.amb.window.AWTWindow;
+import wjd.amb.window.IWindow;
+import wjd.amb.window.LWJGLWindow;
 import wjd.math.V2;
 
 /**
@@ -46,7 +45,7 @@ abstract class Main
     try
     {
       // externalise logs if possible
-      LOGGER.addHandler(new FileHandler("log.txt", true));
+      LOGGER.addHandler(new FileHandler("log.xml", true));
     }
     catch (IOException ex)
     {

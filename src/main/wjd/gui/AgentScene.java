@@ -14,7 +14,7 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package wjd.gui.model;
+package wjd.gui;
 
 import ori.mas.actors.EatActor;
 import ori.mas.actors.MovementActor;
@@ -32,13 +32,14 @@ import ori.ogapi.geometry.Circle;
 import ori.ogapi.geometry.LinkedListSurface;
 import ori.ogapi.geometry.Point;
 import ori.ogapi.util.Iterator;
-import wjd.gui.control.EUpdateResult;
-import wjd.gui.control.IInput;
-import wjd.gui.control.IInput.KeyPress;
-import wjd.gui.control.IInput.MouseClick;
-import wjd.gui.view.Camera;
-import wjd.gui.view.ICanvas;
-import wjd.gui.window.IWindow;
+import wjd.amb.control.EUpdateResult;
+import wjd.amb.control.IInput;
+import wjd.amb.control.IInput.KeyPress;
+import wjd.amb.control.IInput.MouseClick;
+import wjd.amb.model.Scene;
+import wjd.amb.view.Camera;
+import wjd.amb.view.ICanvas;
+import wjd.amb.window.IWindow;
 import wjd.math.V2;
 
 /**
