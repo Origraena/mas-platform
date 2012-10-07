@@ -203,7 +203,8 @@ public class AWTInput implements IInput, KeyListener, MouseListener,
   @Override
   public void mouseWheelMoved(MouseWheelEvent e)
   {
-    mouse.last_scroll = e.getPreciseWheelRotation();
+    // mouse.last_scroll = e.getPreciseWheelRotation();
+    mouse.last_scroll = e.getWheelRotation();
   }
 
   
