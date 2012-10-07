@@ -99,7 +99,7 @@ public class AgentScene extends Scene
   {
     super(window);
     // view
-    camera = new Camera(window.getSizeV2(), null); // null => no boundary
+    camera = new Camera(new V2(), null); // null => no boundary
     // start up
     reset();
   }

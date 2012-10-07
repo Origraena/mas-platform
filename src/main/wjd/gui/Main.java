@@ -46,7 +46,7 @@ abstract class Main
     try
     {
       // externalise logs if possible
-      LOGGER.addHandler(new FileHandler("errors.log", true));
+      LOGGER.addHandler(new FileHandler("log.txt", true));
     }
     catch (IOException ex)
     {
@@ -70,6 +70,7 @@ abstract class Main
     try
     {
       // by default try to create a window using LWJGL's native OpenGL
+      LOGGER.log(Level.INFO, "Launching LWJGL Window");
       window = new LWJGLWindow();
       window.create(WIN_NAME, WIN_SIZE, new AgentScene(window));
       window.run();
@@ -81,8 +82,8 @@ abstract class Main
       {
         // You probably forgot to use -Djava.library.path=...
         LOGGER.log(Level.WARNING, lwjgl_ex.toString(), lwjgl_ex);
-        LOGGER.log(Level.WARNING, "Defaulting to AWT Window");
         // default to AWT if there's a problem with LWJGL
+        LOGGER.log(Level.INFO, "Launching AWT Window");
         window = new AWTWindow();
         window.create(WIN_NAME, WIN_SIZE, new AgentScene(window));
         window.run();
