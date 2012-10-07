@@ -37,7 +37,9 @@ import wjd.amb.control.IInput;
 import wjd.amb.control.IInput.KeyPress;
 import wjd.amb.control.IInput.MouseClick;
 import wjd.amb.model.Scene;
+import wjd.amb.view.Colour;
 import wjd.amb.view.ICanvas;
+import wjd.math.Rect;
 import wjd.math.V2;
 
 /**
@@ -67,6 +69,7 @@ public class AgentScene extends Scene
     body.addActor(new MovementActor(body, 8));
     body.addActor(new EatActor(body, 10));
     body.addSensor(new ShapeSensor(body, new Circle(0, 0, 100)));
+    body.setShape(new Circle(0, 0, 3));
     // attach a simple mind and add to the world
     return new Agent(new StateMachineMind(new PredateState()), body);
   }
@@ -130,16 +133,32 @@ public class AgentScene extends Scene
   @Override
   public void render(ICanvas canvas)
   {
+    //! FIXME
+    if(!canvas.isCameraActive())
+      canvas.createCamera(null);
+    
     // clear the screen
     canvas.clear();
     
     // draw agents
     Iterator itr = world.iterator();
     V2 vpos = new V2();
+    Rect rect = new Rect(0, 0, 16, 16);
     while (itr.hasNext())
     {
-      Point pos = ((Agent) itr.next()).body().center();
-      canvas.circle(vpos.xy(pos.x, pos.y), 8);
+      Agent agent = (Agent) itr.next();
+      
+      Point pos = agent.body().center();
+      if(agent.body().shape() instanceof Circle)
+      {
+        canvas.setColour(Colour.RED);
+        canvas.circle(vpos.xy(pos.x, pos.y), 8);
+      }
+      else
+      {
+        canvas.setColour(Colour.BLUE);
+        canvas.box(rect.xy(pos.x, pos.y));
+      }
     }
 
     // draw hello text
@@ -148,7 +167,7 @@ public class AgentScene extends Scene
 
   @Override
   public EUpdateResult processStaticInput(IInput input)
-  {
+  { 
     // exit if the escape key is pressed
     if(input.isKeyHeld(IInput.EKeyCode.ESC))
       return EUpdateResult.STOP;
